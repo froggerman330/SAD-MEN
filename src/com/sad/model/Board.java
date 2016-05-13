@@ -79,9 +79,13 @@ public class Board
 
     private void performMove(Move move)
     {
-        // TODO: make move
+        // TODO: make move and throw exception if illegal move
         this.history.add(move);
-        this.millFormedCheck(move);
+
+        if(this.isMillFormed(move))
+        {
+            this.doMillFormed();
+        }
     }
 
     /**
@@ -102,273 +106,36 @@ public class Board
      * @param move
      *            the move that may have formed a mill.
      */
-    private void millFormedCheck(Move move)
+    private boolean isMillFormed(Move move)
     {
         int[] location = move.getNewPieceLocation();
         Player player = this.board[location[0]][location[1]].getPlayer();
 
-        switch(location[0])
+        for(Integer[][] mill : this.possibleMills.get(location))
         {
-            case 1:
-                switch(location[1])
-                {
-                    case 1:
-                        if(((this.board[1][1].getPlayer() == this.board[1][4].getPlayer()) && (this.board[1][1]
-                                .getPlayer() == this.board[1][7].getPlayer()))
-                                || ((this.board[1][1].getPlayer() == this.board[4][1].getPlayer()) && (this.board[1][1]
-                                        .getPlayer() == this.board[7][1].getPlayer())))
-                        {
-                            this.millFormed();
-                        }
-                        break;
-                    case 4:
-                        if(((this.board[1][4].getPlayer() == this.board[1][1].getPlayer()) && (this.board[1][4]
-                                .getPlayer() == this.board[1][7].getPlayer()))
-                                || ((this.board[1][4].getPlayer() == this.board[2][4].getPlayer()) && (this.board[1][4]
-                                        .getPlayer() == this.board[3][4].getPlayer())))
-                        {
-                            this.millFormed();
-                        }
-                        break;
-                    case 7:
-                        if(((this.board[1][7].getPlayer() == this.board[1][1].getPlayer()) && (this.board[1][7]
-                                .getPlayer() == this.board[1][4].getPlayer()))
-                                || ((this.board[1][7].getPlayer() == this.board[4][7].getPlayer()) && (this.board[1][7]
-                                        .getPlayer() == this.board[7][7].getPlayer())))
-                        {
-                            this.millFormed();
-                        }
-                        break;
-                }
+            boolean millFormed = true;
 
-                break;
-            case 2:
-                switch(location[1])
+            for(Integer[] intersection : mill)
+            {
+                if(this.getPieceAt(intersection) != Piece.noPiece)
                 {
-                    case 2:
-                        if(((this.board[2][2].getPlayer() == this.board[2][4].getPlayer()) && (this.board[2][2]
-                                .getPlayer() == this.board[2][6].getPlayer()))
-                                || ((this.board[2][2].getPlayer() == this.board[4][2].getPlayer()) && (this.board[2][2]
-                                        .getPlayer() == this.board[6][2].getPlayer())))
-                        {
-                            this.millFormed();
-                        }
-                        break;
-                    case 4:
-                        if(((this.board[2][4].getPlayer() == this.board[2][2].getPlayer()) && (this.board[2][4]
-                                .getPlayer() == this.board[2][6].getPlayer()))
-                                || ((this.board[2][4].getPlayer() == this.board[1][4].getPlayer()) && (this.board[2][4]
-                                        .getPlayer() == this.board[3][4].getPlayer())))
-                        {
-                            this.millFormed();
-                        }
-                        break;
-                    case 6:
-                        if(((this.board[2][6].getPlayer() == this.board[2][2].getPlayer()) && (this.board[2][6]
-                                .getPlayer() == this.board[2][4].getPlayer()))
-                                || ((this.board[2][6].getPlayer() == this.board[4][6].getPlayer()) && (this.board[2][6]
-                                        .getPlayer() == this.board[6][6].getPlayer())))
-                        {
-                            this.millFormed();
-                        }
-                        break;
+                    if(this.getPieceAt(intersection).getPlayer() != player)
+                    {
+                        millFormed = millFormed & false;
+                    }
                 }
-            case 3:
-                switch(location[1])
-                {
-                    case 3:
-                        if(((this.board[3][3].getPlayer() == this.board[3][4].getPlayer()) && (this.board[3][3]
-                                .getPlayer() == this.board[3][5].getPlayer()))
-                                || ((this.board[3][3].getPlayer() == this.board[4][3].getPlayer()) && (this.board[3][3]
-                                        .getPlayer() == this.board[5][3].getPlayer())))
-                        {
-                            this.millFormed();
-                        }
-                        break;
-                    case 4:
-                        if(((this.board[3][4].getPlayer() == this.board[3][3].getPlayer()) && (this.board[3][4]
-                                .getPlayer() == this.board[3][5].getPlayer()))
-                                || ((this.board[3][4].getPlayer() == this.board[1][4].getPlayer()) && (this.board[3][4]
-                                        .getPlayer() == this.board[2][4].getPlayer())))
-                        {
-                            this.millFormed();
-                        }
-                        break;
-                    case 5:
-                        if(((this.board[3][5].getPlayer() == this.board[3][3].getPlayer()) && (this.board[3][5]
-                                .getPlayer() == this.board[3][4].getPlayer()))
-                                || ((this.board[3][5].getPlayer() == this.board[4][5].getPlayer()) && (this.board[3][5]
-                                        .getPlayer() == this.board[5][5].getPlayer())))
-                        {
-                            this.millFormed();
-                        }
-                        break;
-                }
+            }
 
-                break;
-            case 4:
-                switch(location[1])
-                {
-                    case 1:
-                        if(((this.board[4][1].getPlayer() == this.board[4][2].getPlayer()) && (this.board[4][1]
-                                .getPlayer() == this.board[4][3].getPlayer()))
-                                || ((this.board[4][1].getPlayer() == this.board[1][1].getPlayer()) && (this.board[4][1]
-                                        .getPlayer() == this.board[7][1].getPlayer())))
-                        {
-                            this.millFormed();
-                        }
-                        break;
-                    case 2:
-                        if(((this.board[4][2].getPlayer() == this.board[4][1].getPlayer()) && (this.board[4][2]
-                                .getPlayer() == this.board[4][3].getPlayer()))
-                                || ((this.board[4][1].getPlayer() == this.board[1][1].getPlayer()) && (this.board[4][1]
-                                        .getPlayer() == this.board[7][1].getPlayer())))
-                        {
-                            this.millFormed();
-                        }
-                        break;
-                    case 3:
-                        if(((this.board[4][3].getPlayer() == this.board[4][1].getPlayer()) && (this.board[4][3]
-                                .getPlayer() == this.board[4][2].getPlayer()))
-                                || ((this.board[4][3].getPlayer() == this.board[3][3].getPlayer()) && (this.board[4][3]
-                                        .getPlayer() == this.board[5][3].getPlayer())))
-                        {
-                            this.millFormed();
-                        }
-                        break;
-                    case 5:
-                        if(((this.board[4][5].getPlayer() == this.board[4][6].getPlayer()) && (this.board[4][5]
-                                .getPlayer() == this.board[4][7].getPlayer()))
-                                || ((this.board[4][5].getPlayer() == this.board[3][5].getPlayer()) && (this.board[4][5]
-                                        .getPlayer() == this.board[5][5].getPlayer())))
-                        {
-                            this.millFormed();
-                        }
-                        break;
-                    case 6:
-                        if(((this.board[4][6].getPlayer() == this.board[4][5].getPlayer()) && (this.board[4][6]
-                                .getPlayer() == this.board[4][7].getPlayer()))
-                                || ((this.board[4][6].getPlayer() == this.board[2][6].getPlayer()) && (this.board[4][6]
-                                        .getPlayer() == this.board[6][6].getPlayer())))
-                        {
-                            this.millFormed();
-                        }
-                        break;
-                    case 7:
-                        if(((this.board[4][7].getPlayer() == this.board[4][5].getPlayer()) && (this.board[4][7]
-                                .getPlayer() == this.board[4][6].getPlayer()))
-                                || ((this.board[4][7].getPlayer() == this.board[1][7].getPlayer()) && (this.board[4][7]
-                                        .getPlayer() == this.board[7][7].getPlayer())))
-                        {
-                            this.millFormed();
-                        }
-                        break;
-                }
-
-                break;
-            case 5:
-                switch(location[1])
-                {
-                    case 3:
-                        if(((this.board[5][3].getPlayer() == this.board[5][4].getPlayer()) && (this.board[5][3]
-                                .getPlayer() == this.board[5][5].getPlayer()))
-                                || ((this.board[5][3].getPlayer() == this.board[2][3].getPlayer()) && (this.board[5][3]
-                                        .getPlayer() == this.board[4][3].getPlayer())))
-                        {
-                            this.millFormed();
-                        }
-                        break;
-                    case 4:
-                        if(((this.board[5][4].getPlayer() == this.board[5][3].getPlayer()) && (this.board[5][4]
-                                .getPlayer() == this.board[5][5].getPlayer()))
-                                || ((this.board[5][4].getPlayer() == this.board[6][4].getPlayer()) && (this.board[5][4]
-                                        .getPlayer() == this.board[7][7].getPlayer())))
-                        {
-                            this.millFormed();
-                        }
-                        break;
-                    case 5:
-                        if(((this.board[5][5].getPlayer() == this.board[5][3].getPlayer()) && (this.board[5][5]
-                                .getPlayer() == this.board[5][4].getPlayer()))
-                                || ((this.board[5][5].getPlayer() == this.board[3][5].getPlayer()) && (this.board[5][5]
-                                        .getPlayer() == this.board[4][5].getPlayer())))
-                        {
-                            this.millFormed();
-                        }
-                        break;
-                }
-
-                break;
-            case 6:
-                switch(location[1])
-                {
-                    case 2:
-                        if(((this.board[6][2].getPlayer() == this.board[6][4].getPlayer()) && (this.board[6][2]
-                                .getPlayer() == this.board[6][6].getPlayer()))
-                                || ((this.board[6][2].getPlayer() == this.board[2][2].getPlayer()) && (this.board[6][2]
-                                        .getPlayer() == this.board[4][2].getPlayer())))
-                        {
-                            this.millFormed();
-                        }
-                        break;
-                    case 4:
-                        if(((this.board[6][4].getPlayer() == this.board[6][2].getPlayer()) && (this.board[6][4]
-                                .getPlayer() == this.board[6][6].getPlayer()))
-                                || ((this.board[6][4].getPlayer() == this.board[5][4].getPlayer()) && (this.board[6][4]
-                                        .getPlayer() == this.board[7][4].getPlayer())))
-                        {
-                            this.millFormed();
-                        }
-                        break;
-                    case 6:
-                        if(((this.board[6][6].getPlayer() == this.board[6][2].getPlayer()) && (this.board[6][6]
-                                .getPlayer() == this.board[6][4].getPlayer()))
-                                || ((this.board[6][6].getPlayer() == this.board[2][6].getPlayer()) && (this.board[6][6]
-                                        .getPlayer() == this.board[4][6].getPlayer())))
-                        {
-                            this.millFormed();
-                        }
-                        break;
-                }
-
-                break;
-            case 7:
-                switch(location[1])
-                {
-                    case 1:
-                        if(((this.board[7][1].getPlayer() == this.board[7][4].getPlayer()) && (this.board[7][1]
-                                .getPlayer() == this.board[7][7].getPlayer()))
-                                || ((this.board[7][1].getPlayer() == this.board[4][1].getPlayer()) && (this.board[7][1]
-                                        .getPlayer() == this.board[1][1].getPlayer())))
-                        {
-                            this.millFormed();
-                        }
-                        break;
-                    case 4:
-                        if(((this.board[7][4].getPlayer() == this.board[7][1].getPlayer()) && (this.board[7][4]
-                                .getPlayer() == this.board[7][7].getPlayer()))
-                                || ((this.board[7][4].getPlayer() == this.board[5][4].getPlayer()) && (this.board[7][4]
-                                        .getPlayer() == this.board[6][4].getPlayer())))
-                        {
-                            this.millFormed();
-                        }
-                        break;
-                    case 7:
-                        if(((this.board[7][7].getPlayer() == this.board[7][1].getPlayer()) && (this.board[7][7]
-                                .getPlayer() == this.board[7][4].getPlayer()))
-                                || ((this.board[7][7].getPlayer() == this.board[1][7].getPlayer()) && (this.board[7][7]
-                                        .getPlayer() == this.board[4][7].getPlayer())))
-                        {
-                            this.millFormed();
-                        }
-                        break;
-                }
-
-                break;
+            if(millFormed)
+            {
+                return true;
+            }
         }
+
+        return false;
     }
 
-    private void millFormed()
+    private void doMillFormed()
     {
         // TODO: pass to controller to get more input.
 
@@ -445,6 +212,36 @@ public class Board
     public Piece[][] getBoard()
     {
         return this.board;
+    }
+
+    /**
+     * returns the piece at <b>location</b>.
+     * 
+     * @param location
+     *            the location on the board to return the piece at.
+     * @return a piece at <b>location</b>.
+     */
+    private Piece getPieceAt(int[] location)
+    {
+        if(this.board[location[0]][location[1]] != null)
+        {
+            return this.board[location[0]][location[1]];
+        }
+
+        return Piece.noPiece;
+    }
+
+    /**
+     * returns the piece at <b>location</b>.
+     * 
+     * @param location
+     *            the location on the board to return the piece at.
+     * @return a piece at <b>location</b>.
+     */
+    private Piece getPieceAt(Integer[] location)
+    {
+        int[] intersection = {location[0], location[1]};
+        return this.getPieceAt(intersection);
     }
 
     /**
