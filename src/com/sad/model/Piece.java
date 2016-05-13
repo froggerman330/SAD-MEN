@@ -15,7 +15,7 @@ public class Piece
      */
     public Piece(Player player)
     {
-	this.setPlayer(player);
+        this.setPlayer(player);
     }
 
     /**
@@ -23,7 +23,7 @@ public class Piece
      */
     public Player getPlayer()
     {
-	return player;
+        return this.player;
     }
 
     /**
@@ -32,7 +32,7 @@ public class Piece
      */
     public void setPlayer(Player player)
     {
-	this.player = player;
+        this.player = player;
     }
 
 }

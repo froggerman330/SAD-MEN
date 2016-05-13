@@ -5,12 +5,18 @@ public class Move
     private int[] previousPieceLocation = null;
     private int[] newPieceLocation = null;
 
+    public Move(int[] previousPieceLocation, int[] newPieceLocation)
+    {
+        this.previousPieceLocation = previousPieceLocation;
+        this.newPieceLocation = newPieceLocation;
+    }
+
     /**
      * @return the newPieceLocation
      */
     public int[] getNewPieceLocation()
     {
-	return newPieceLocation;
+        return this.newPieceLocation;
     }
 
     /**
@@ -19,7 +25,7 @@ public class Move
      */
     public void setNewPieceLocation(int[] newPieceLocation)
     {
-	this.newPieceLocation = newPieceLocation;
+        this.newPieceLocation = newPieceLocation;
     }
 
     /**
@@ -27,7 +33,7 @@ public class Move
      */
     public int[] getPreviousPieceLocation()
     {
-	return previousPieceLocation;
+        return this.previousPieceLocation;
     }
 
     /**
@@ -36,6 +42,6 @@ public class Move
      */
     public void setPreviousPieceLocation(int[] previousPieceLocation)
     {
-	this.previousPieceLocation = previousPieceLocation;
+        this.previousPieceLocation = previousPieceLocation;
     }
 }
