@@ -1,9 +1,9 @@
 package com.sad.model;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 
+import com.sad.controller.GameController;
 import com.sad.data.Move;
 
 public class Board
@@ -19,9 +19,10 @@ public class Board
             {Piece.noPiece, null, null, Piece.noPiece, null, null, Piece.noPiece}};
     private String gameState = "placing";
     private LinkedList<Move> history = new LinkedList<Move>();
-    private HashMap<Player, ArrayList<Piece>> pieces = new HashMap<Player, ArrayList<Piece>>();
+    private HashMap<Player, LinkedList<Piece>> pieces = new HashMap<Player, LinkedList<Piece>>();
     // List of mills
     HashMap<Integer[], Integer[][][]> possibleMills = new HashMap<Integer[], Integer[][][]>();
+    private GameController controller = null;
 
     /**
      * Constructor for the board. Takes each player and makes nine pieces for each player.
@@ -29,12 +30,13 @@ public class Board
      * @param players
      *            the piece owners.
      */
-    public Board(Player[] players)
+    public Board(Player[] players, GameController controller)
     {
+        this.controller = controller;
         // Make pieces
         for(Player player : players)
         {
-            ArrayList<Piece> tempPieces = new ArrayList<Piece>();
+            LinkedList<Piece> tempPieces = new LinkedList<Piece>();
             for(int i = 0; i < 9; i++)
             {
                 tempPieces.add(new Piece(player));
@@ -80,6 +82,15 @@ public class Board
     private void performMove(Move move)
     {
         // TODO: make move and throw exception if illegal move
+        if(move.getNewPieceLocation() == null)
+        {// removing a piece
+            this.removePieceAt(move.getPreviousPieceLocation());
+        }
+        else if(move.getPreviousPieceLocation() == null)
+        {// adding a piece
+            this.setPieceAt(move.getNewPieceLocation(), this.getPieceFrom(this.controller.getCurrentPlayer()));
+        }
+
         this.history.add(move);
 
         if(this.isMillFormed(move))
@@ -89,11 +100,22 @@ public class Board
     }
 
     /**
+     * Removes a <i>piece</i> from the <i>board</i> at <b>location</b>
+     * 
+     * @param location
+     *            the location to remove the <i>piece</i> from the <i>board</i> at.
+     */
+    private void removePieceAt(int[] location)
+    {
+        this.board[location[0]][location[1]] = Piece.noPiece;
+    }
+
+    /**
      * Counts the number of pieces a player has left.
      * 
      * @param player
      *            the player to count the number of pieces of.
-     * @return the number of pieces <i>player</i> has left.
+     * @return the number of pieces <b>player</b> has left.
      */
     private int countPieces(Player player)
     {// knows how many pieces a player has left
@@ -144,7 +166,7 @@ public class Board
     /**
      * Checks to see if the game is over by counting the number of pieces on the board for each player.
      * 
-     * @return <b>true</b> if the game is over.
+     * @return <i>true</i> if the game is over.
      */
     private boolean isGameOver()
     {
@@ -214,6 +236,11 @@ public class Board
         return this.board;
     }
 
+    private Piece getPieceFrom(Player player)
+    {
+        return this.pieces.get(player).pop();
+    }
+
     /**
      * returns the piece at <b>location</b>.
      * 
@@ -245,11 +272,15 @@ public class Board
     }
 
     /**
-     * @param board
-     *            the board to set
+     * Sets a <b>piece</b> on the <i>board</i> at <b>location</b>.
+     * 
+     * @param location
+     *            the location on the board to set with <b>piece</b>.
+     * @param piece
+     *            the piece to set on the board in <b>location</b>.
      */
-    public void setBoard(Piece[][] board)
+    public void setPieceAt(int[] location, Piece piece)
     {
-        this.board = board;
+        this.board[location[0]][location[1]] = piece;
     }
 }
