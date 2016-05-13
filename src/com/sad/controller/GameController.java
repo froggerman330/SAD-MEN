@@ -1,6 +1,6 @@
 package com.sad.controller;
 
-import com.sad.exceptions.IllegalMoveException;
+import com.sad.framework.exceptions.IllegalMoveException;
 import com.sad.model.Board;
 import com.sad.model.Player;
 import com.sad.view.GameInterface;

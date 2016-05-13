@@ -1,4 +1,4 @@
-package com.sad.exceptions;
+package com.sad.framework.exceptions;
 
 public class IllegalMoveException extends Exception
 {
