@@ -5,6 +5,7 @@ import java.util.LinkedList;
 
 import com.sad.controller.GameController;
 import com.sad.data.Move;
+import com.sad.exceptions.IllegalMoveException;
 
 public class Board
 {
@@ -17,7 +18,7 @@ public class Board
             {null, null, Piece.noPiece, Piece.noPiece, Piece.noPiece, null, null},
             {null, Piece.noPiece, null, Piece.noPiece, null, Piece.noPiece, null},
             {Piece.noPiece, null, null, Piece.noPiece, null, null, Piece.noPiece}};
-    private String gameState = "placing";
+    private String gameState = "placing"; // also moving and flying
     private LinkedList<Move> history = new LinkedList<Move>();
     private HashMap<Player, LinkedList<Piece>> pieces = new HashMap<Player, LinkedList<Piece>>();
     // List of mills
@@ -53,33 +54,33 @@ public class Board
      */
     private void initializeMills()
     {// knows adjacent intersections
-        this.possibleMills.put(new Integer[] {1, 1}, new Integer[][][] { { {1, 4}, {1, 7}}, { {4, 1}, {7, 1}}});
-        this.possibleMills.put(new Integer[] {1, 4}, new Integer[][][] { { {1, 1}, {1, 7}}, { {2, 4}, {3, 4}}});
-        this.possibleMills.put(new Integer[] {1, 7}, new Integer[][][] { { {1, 1}, {1, 4}}, { {4, 7}, {7, 7}}});
-        this.possibleMills.put(new Integer[] {2, 2}, new Integer[][][] { { {2, 4}, {2, 6}}, { {4, 2}, {6, 2}}});
-        this.possibleMills.put(new Integer[] {2, 4}, new Integer[][][] { { {2, 2}, {2, 6}}, { {1, 4}, {3, 4}}});
-        this.possibleMills.put(new Integer[] {2, 6}, new Integer[][][] { { {2, 2}, {2, 4}}, { {4, 6}, {6, 6}}});
-        this.possibleMills.put(new Integer[] {3, 3}, new Integer[][][] { { {3, 4}, {3, 5}}, { {4, 3}, {5, 3}}});
-        this.possibleMills.put(new Integer[] {3, 4}, new Integer[][][] { { {3, 3}, {3, 5}}, { {1, 4}, {2, 4}}});
-        this.possibleMills.put(new Integer[] {3, 5}, new Integer[][][] { { {3, 3}, {3, 4}}, { {4, 5}, {5, 5}}});
-        this.possibleMills.put(new Integer[] {4, 1}, new Integer[][][] { { {4, 2}, {4, 3}}, { {1, 1}, {7, 1}}});
-        this.possibleMills.put(new Integer[] {4, 2}, new Integer[][][] { { {4, 1}, {4, 3}}, { {2, 2}, {6, 2}}});
-        this.possibleMills.put(new Integer[] {4, 3}, new Integer[][][] { { {4, 1}, {4, 2}}, { {3, 3}, {5, 3}}});
-        this.possibleMills.put(new Integer[] {4, 5}, new Integer[][][] { { {4, 6}, {4, 7}}, { {1, 7}, {7, 7}}});
-        this.possibleMills.put(new Integer[] {4, 6}, new Integer[][][] { { {4, 5}, {4, 7}}, { {2, 6}, {6, 6}}});
-        this.possibleMills.put(new Integer[] {4, 7}, new Integer[][][] { { {4, 5}, {4, 6}}, { {3, 5}, {5, 5}}});
-        this.possibleMills.put(new Integer[] {5, 3}, new Integer[][][] { { {5, 4}, {5, 5}}, { {3, 3}, {4, 3}}});
-        this.possibleMills.put(new Integer[] {5, 4}, new Integer[][][] { { {3, 3}, {3, 5}}, { {6, 4}, {7, 4}}});
-        this.possibleMills.put(new Integer[] {5, 5}, new Integer[][][] { { {3, 3}, {3, 4}}, { {3, 5}, {4, 5}}});
-        this.possibleMills.put(new Integer[] {6, 2}, new Integer[][][] { { {6, 4}, {6, 6}}, { {2, 2}, {4, 2}}});
-        this.possibleMills.put(new Integer[] {6, 4}, new Integer[][][] { { {6, 2}, {6, 6}}, { {5, 4}, {7, 4}}});
-        this.possibleMills.put(new Integer[] {6, 6}, new Integer[][][] { { {6, 2}, {6, 4}}, { {2, 6}, {4, 6}}});
-        this.possibleMills.put(new Integer[] {7, 1}, new Integer[][][] { { {7, 4}, {7, 7}}, { {1, 1}, {4, 1}}});
-        this.possibleMills.put(new Integer[] {7, 4}, new Integer[][][] { { {7, 1}, {7, 7}}, { {5, 4}, {6, 4}}});
-        this.possibleMills.put(new Integer[] {7, 7}, new Integer[][][] { { {7, 1}, {7, 4}}, { {1, 7}, {4, 7}}});
+        this.possibleMills.put(new Integer[] {0, 0}, new Integer[][][] { { {0, 3}, {0, 6}}, { {3, 0}, {6, 0}}});
+        this.possibleMills.put(new Integer[] {0, 3}, new Integer[][][] { { {0, 0}, {0, 6}}, { {1, 3}, {2, 3}}});
+        this.possibleMills.put(new Integer[] {0, 6}, new Integer[][][] { { {0, 0}, {0, 3}}, { {3, 6}, {6, 6}}});
+        this.possibleMills.put(new Integer[] {1, 1}, new Integer[][][] { { {1, 3}, {1, 5}}, { {3, 1}, {5, 1}}});
+        this.possibleMills.put(new Integer[] {1, 3}, new Integer[][][] { { {1, 1}, {1, 5}}, { {0, 3}, {2, 3}}});
+        this.possibleMills.put(new Integer[] {1, 5}, new Integer[][][] { { {1, 1}, {1, 3}}, { {3, 5}, {5, 5}}});
+        this.possibleMills.put(new Integer[] {2, 2}, new Integer[][][] { { {2, 3}, {2, 4}}, { {3, 2}, {4, 2}}});
+        this.possibleMills.put(new Integer[] {2, 3}, new Integer[][][] { { {2, 2}, {2, 4}}, { {0, 3}, {1, 3}}});
+        this.possibleMills.put(new Integer[] {2, 4}, new Integer[][][] { { {2, 2}, {2, 3}}, { {3, 4}, {4, 4}}});
+        this.possibleMills.put(new Integer[] {3, 0}, new Integer[][][] { { {3, 1}, {3, 2}}, { {0, 0}, {6, 0}}});
+        this.possibleMills.put(new Integer[] {3, 1}, new Integer[][][] { { {3, 0}, {3, 2}}, { {1, 1}, {5, 1}}});
+        this.possibleMills.put(new Integer[] {3, 2}, new Integer[][][] { { {3, 0}, {3, 1}}, { {2, 2}, {4, 2}}});
+        this.possibleMills.put(new Integer[] {3, 4}, new Integer[][][] { { {3, 5}, {3, 6}}, { {0, 6}, {6, 6}}});
+        this.possibleMills.put(new Integer[] {3, 5}, new Integer[][][] { { {3, 4}, {3, 6}}, { {1, 5}, {5, 5}}});
+        this.possibleMills.put(new Integer[] {3, 6}, new Integer[][][] { { {3, 4}, {3, 5}}, { {2, 4}, {4, 4}}});
+        this.possibleMills.put(new Integer[] {4, 2}, new Integer[][][] { { {4, 3}, {4, 4}}, { {2, 2}, {3, 2}}});
+        this.possibleMills.put(new Integer[] {4, 3}, new Integer[][][] { { {2, 2}, {2, 4}}, { {5, 3}, {6, 3}}});
+        this.possibleMills.put(new Integer[] {4, 4}, new Integer[][][] { { {2, 2}, {2, 3}}, { {2, 4}, {3, 4}}});
+        this.possibleMills.put(new Integer[] {5, 1}, new Integer[][][] { { {5, 3}, {5, 5}}, { {1, 1}, {3, 1}}});
+        this.possibleMills.put(new Integer[] {5, 3}, new Integer[][][] { { {5, 1}, {5, 5}}, { {4, 3}, {6, 3}}});
+        this.possibleMills.put(new Integer[] {5, 5}, new Integer[][][] { { {5, 1}, {5, 3}}, { {1, 5}, {3, 5}}});
+        this.possibleMills.put(new Integer[] {6, 0}, new Integer[][][] { { {6, 3}, {6, 6}}, { {0, 0}, {3, 0}}});
+        this.possibleMills.put(new Integer[] {6, 3}, new Integer[][][] { { {6, 0}, {6, 6}}, { {4, 3}, {5, 3}}});
+        this.possibleMills.put(new Integer[] {6, 6}, new Integer[][][] { { {6, 0}, {6, 3}}, { {0, 6}, {3, 6}}});
     }
 
-    private void performMove(Move move)
+    public void performMove(Move move) throws IllegalMoveException
     {
         // TODO: make move and throw exception if illegal move
         if(move.getNewPieceLocation() == null)
@@ -90,10 +91,14 @@ public class Board
         {// adding a piece
             this.setPieceAt(move.getNewPieceLocation(), this.getPieceFrom(this.controller.getCurrentPlayer()));
         }
+        else
+        {// moving a piece
+
+        }
 
         this.history.add(move);
 
-        if(this.isMillFormed(move))
+        if(this.isMill(move.getNewPieceLocation()))
         {
             this.doMillFormed();
         }
@@ -104,10 +109,64 @@ public class Board
      * 
      * @param location
      *            the location to remove the <i>piece</i> from the <i>board</i> at.
+     * @throws IllegalMoveException
+     *             if the move being made is illegal.
      */
-    private void removePieceAt(int[] location)
+    private void removePieceAt(int[] location) throws IllegalMoveException
     {
+        Piece currentPiece = this.board[location[0]][location[1]];
+        if(currentPiece == null || currentPiece == Piece.noPiece)
+        {
+            throw new IllegalMoveException("There is no piece to remove at " + location[0] + ", " + location[1] + ".");
+        }
+        else if(this.isMill(location) && this.isNonMillPieceOnBoard())
+        {
+            throw new IllegalMoveException("There are other non-mill forming pieces on the board to remove.");
+        }
+
         this.board[location[0]][location[1]] = Piece.noPiece;
+    }
+
+    private boolean isNonMillPieceOnBoard()
+    {
+        for(Piece[] pieceRow : this.board)
+        {
+            for(Piece p : pieceRow)
+            {
+                if(p != null && p != Piece.noPiece && p.getPlayer() != this.controller.getCurrentPlayer())
+                {
+                    if(!this.isMill(this.getLocationOfPiece(p)))
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * finds the location of piece <b>p</b>.
+     * 
+     * @param p
+     *            the piece to find the location of.
+     * @return the location {i, j}.
+     */
+    private int[] getLocationOfPiece(Piece p)
+    {
+        for(int i = 0; i < this.board.length; i++)
+        {
+            for(int j = 0; j < this.board[0].length; j++)
+            {
+                if(this.getPieceAt(new int[] {i, j}) == p)
+                {
+                    return new int[] {i, j};
+                }
+            }
+        }
+
+        throw new RuntimeException("There is no piece that matches the input on the board.");
     }
 
     /**
@@ -117,7 +176,7 @@ public class Board
      *            the player to count the number of pieces of.
      * @return the number of pieces <b>player</b> has left.
      */
-    private int countPieces(Player player)
+    public int countPieces(Player player)
     {// knows how many pieces a player has left
         return this.pieces.get(player).size();
     }
@@ -125,13 +184,12 @@ public class Board
     /**
      * Checks if a Mill has be formed by the most recent move.
      * 
-     * @param move
+     * @param location
      *            the move that may have formed a mill.
      */
-    private boolean isMillFormed(Move move)
+    private boolean isMill(int[] location)
     {
-        int[] location = move.getNewPieceLocation();
-        Player player = this.board[location[0]][location[1]].getPlayer();
+        Player player = this.controller.getCurrentPlayer();
 
         for(Integer[][] mill : this.possibleMills.get(location))
         {
@@ -168,18 +226,18 @@ public class Board
      * 
      * @return <i>true</i> if the game is over.
      */
-    private boolean isGameOver()
+    public boolean isGameOver()
     {
         if(this.gameState.equalsIgnoreCase("flying"))
         {
             int countPlayer1 = 0;
             int countPlayer2 = 0;
             Player player1 = null, player2 = null;
-            for(Piece[] pieceRow : this.board)
+            for(Piece[] pieceRow : this.getBoard())
             {
                 for(Piece p : pieceRow)
                 {
-                    if(p != null)
+                    if(p != null && p != Piece.noPiece)
                     {
                         if(player1 == null)
                         {
@@ -250,12 +308,7 @@ public class Board
      */
     private Piece getPieceAt(int[] location)
     {
-        if(this.board[location[0]][location[1]] != null)
-        {
-            return this.board[location[0]][location[1]];
-        }
-
-        return Piece.noPiece;
+        return this.board[location[0]][location[1]];
     }
 
     /**
@@ -278,9 +331,16 @@ public class Board
      *            the location on the board to set with <b>piece</b>.
      * @param piece
      *            the piece to set on the board in <b>location</b>.
+     * @throws IllegalMoveException
+     *             if there is already a piece at the <b>location</b>.
      */
-    public void setPieceAt(int[] location, Piece piece)
+    public void setPieceAt(int[] location, Piece piece) throws IllegalMoveException
     {
-        this.board[location[0]][location[1]] = piece;
+        Piece currentPiece = this.board[location[0]][location[1]];
+        if(currentPiece != Piece.noPiece)
+        {
+            throw new IllegalMoveException("There is already a piece at " + location[0] + ", " + location[1] + ".");
+        }
+        currentPiece = piece;
     }
 }
