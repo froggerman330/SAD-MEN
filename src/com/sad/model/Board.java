@@ -23,10 +23,12 @@ public class Board
     private GameController controller = null;
 
     /**
-     * Constructor for the board. Takes each player and makes nine pieces for each player.
+     * Constructor for the board. Takes each player and makes nine pieces for each player. Also initializes the millmap.
      * 
      * @param players
      *            the piece owners.
+     * @param controller
+     *            the game controller.
      */
     public Board(Player[] players, GameController controller)
     {
