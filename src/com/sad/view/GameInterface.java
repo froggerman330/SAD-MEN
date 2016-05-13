@@ -7,12 +7,12 @@ public class GameInterface
     private String defaultBoard = "o-----o-----o\n" + "| o---o---o |\n" + "| | o-o-o | |\n" + "o-o-o   o-o-o\n"
             + "| | o-o-o | |\n" + "| o---o---o |\n" + "o-----o-----o";
 
-    private void displayError(Exception e)
+    public void displayError(Exception e)
     {
 
     }
 
-    private Move getInput()
+    public Move getMove()
     {
         return new Move(new int[] {0, 0}, new int[] {0, 0});
     }

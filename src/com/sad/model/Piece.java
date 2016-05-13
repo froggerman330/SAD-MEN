@@ -4,7 +4,9 @@ public class Piece
 {
     private Player player;
 
-    // represents a place a piece can be played but is not yet.
+    /**
+     * Represents an empty board location.
+     */
     public static Piece noPiece;
 
     /**
