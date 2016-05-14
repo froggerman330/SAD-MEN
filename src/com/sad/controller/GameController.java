@@ -52,7 +52,15 @@ public class GameController
 				// TODO: distinguish between play and remove but save state so
 				// that illegal remove prompts for another
 				// remove.
-				this.getMove();
+				if(!this.isMillMade())
+				{
+					this.getMove();
+				}
+				else
+				{
+					this.getMillMove();
+				}
+
 				this.nextTurn();
 			}
 			catch(IllegalMoveException e)
@@ -60,6 +68,18 @@ public class GameController
 				this.view.displayError(e);
 			}
 		}
+	}
+
+	private void getMillMove()
+	{
+		// TODO Auto-generated method stub
+
+	}
+
+	private boolean isMillMade()
+	{
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 	private void nextTurn()
@@ -80,7 +100,6 @@ public class GameController
 
 	private void getMove() throws IllegalMoveException
 	{
-		// TODO: change player based on setting or removing.
 		Move move = this.view.getMove();
 		move.setPlayer(this.getCurrentPlayer());
 		this.board.performMove(move);
