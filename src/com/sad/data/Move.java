@@ -1,14 +1,18 @@
 package com.sad.data;
 
+import com.sad.model.Player;
+
 public class Move
 {
     private int[] previousPieceLocation = null;
     private int[] newPieceLocation = null;
+    private Player player = null;
 
-    public Move(int[] previousPieceLocation, int[] newPieceLocation)
+    public Move(int[] previousPieceLocation, int[] newPieceLocation, Player player)
     {
         this.previousPieceLocation = previousPieceLocation;
         this.newPieceLocation = newPieceLocation;
+        this.setPlayer(player);
     }
 
     /**
@@ -43,5 +47,22 @@ public class Move
     public void setPreviousPieceLocation(int[] previousPieceLocation)
     {
         this.previousPieceLocation = previousPieceLocation;
+    }
+
+    /**
+     * @return the player
+     */
+    public Player getPlayer()
+    {
+        return this.player;
+    }
+
+    /**
+     * @param player
+     *            the player to set
+     */
+    public void setPlayer(Player player)
+    {
+        this.player = player;
     }
 }

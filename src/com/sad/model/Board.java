@@ -3,7 +3,6 @@ package com.sad.model;
 import java.util.HashMap;
 import java.util.LinkedList;
 
-import com.sad.controller.GameController;
 import com.sad.data.Move;
 import com.sad.framework.exceptions.IllegalMoveException;
 
@@ -20,7 +19,6 @@ public class Board
     private LinkedList<Move> history = new LinkedList<Move>();
     private HashMap<Player, LinkedList<Piece>> pieces = new HashMap<Player, LinkedList<Piece>>();
     HashMap<Integer[], Integer[][][]> millMap = new HashMap<Integer[], Integer[][][]>();
-    private GameController controller = null;
 
     /**
      * Constructor for the board. Takes each player and makes nine pieces for each player. Also initializes the millmap.
@@ -30,9 +28,8 @@ public class Board
      * @param controller
      *            the game controller.
      */
-    public Board(Player[] players, GameController controller)
+    public Board(Player[] players)
     {
-        this.controller = controller;
         // Make pieces
         for(Player player : players)
         {
@@ -83,12 +80,12 @@ public class Board
     {
         // TODO: make move and throw exception if illegal move
         if(move.getNewPieceLocation() == null)
-        {// removing a piece
-            this.removePieceAt(move.getPreviousPieceLocation());
+        {// removing a piece from playerX
+            this.removePieceAt(move.getPlayer(), move.getPreviousPieceLocation());
         }
         else if(move.getPreviousPieceLocation() == null)
-        {// adding a piece
-            this.setPieceAt(move.getNewPieceLocation(), this.getPieceFrom(this.controller.getCurrentPlayer()));
+        {// adding a piece for playerY
+            this.setPieceAt(move.getNewPieceLocation(), this.getPieceFrom(move.getPlayer()));
         }
         else
         {// moving a piece
@@ -97,7 +94,7 @@ public class Board
 
         this.history.add(move);
 
-        if(this.isMill(move.getNewPieceLocation()))
+        if(this.isMill(move.getPlayer(), move.getNewPieceLocation()))
         {
             this.doMillFormed();
         }
@@ -106,19 +103,21 @@ public class Board
     /**
      * Removes a <i>piece</i> from the <i>board</i> at <b>location</b>
      * 
+     * @param player
+     *            the player that a piece is being removed from.
      * @param location
      *            the location to remove the <i>piece</i> from the <i>board</i> at.
      * @throws IllegalMoveException
      *             if the move being made is illegal.
      */
-    private void removePieceAt(int[] location) throws IllegalMoveException
+    private void removePieceAt(Player player, int[] location) throws IllegalMoveException
     {
         Piece currentPiece = this.board[location[0]][location[1]];
         if(currentPiece == null || currentPiece == Piece.noPiece)
         {
             throw new IllegalMoveException("There is no piece to remove at " + location[0] + ", " + location[1] + ".");
         }
-        else if(this.isMill(location) && this.isNonMillPieceOnBoard(this.controller.getCurrentPlayer()))
+        else if(this.isMill(player, location) && this.isNonMillPieceOnBoard(player))
         {
             throw new IllegalMoveException("There are other non-mill forming pieces on the board to remove.");
         }
@@ -141,7 +140,7 @@ public class Board
             {
                 if(p != null && p != Piece.noPiece && p.getPlayer() == player)
                 {
-                    if(!this.isMill(this.getLocationOfPiece(p)))
+                    if(!this.isMill(player, this.getLocationOfPiece(p)))
                     {
                         return true;
                     }
@@ -190,13 +189,13 @@ public class Board
     /**
      * Checks if a Mill has be formed by the most recent move.
      * 
+     * @param player
+     *            the player to check if a location is a mill for.
      * @param location
      *            the move that may have formed a mill.
      */
-    private boolean isMill(int[] location)
+    private boolean isMill(Player player, int[] location)
     {
-        Player player = this.controller.getCurrentPlayer();
-
         for(Integer[][] mill : this.millMap.get(location))
         {
             boolean millFormed = true;
