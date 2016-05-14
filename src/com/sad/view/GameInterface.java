@@ -14,6 +14,6 @@ public class GameInterface
 
     public Move getMove()
     {
-        return new Move(new int[] {0, 0}, new int[] {0, 0});
+        return new Move(new int[] {0, 0}, new int[] {0, 0}, null);
     }
 }

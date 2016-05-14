@@ -1,5 +1,6 @@
 package com.sad.controller;
 
+import com.sad.data.Move;
 import com.sad.framework.exceptions.IllegalMoveException;
 import com.sad.model.Board;
 import com.sad.model.Player;
@@ -10,10 +11,11 @@ public class GameController
     private Player currentPlayer = null;
     private Board board;
     private Player[] players;
-    private GameInterface view = new GameInterface();
+    private GameInterface view;
 
     public GameController()
     {
+        this.view = new GameInterface();
         // get players from interface
         // set players
         // create board
@@ -24,15 +26,44 @@ public class GameController
     {
         while(!this.isGameOver())
         {
+            // Change game state
             switch(this.board.getGameState())
             {
                 case "placing":
-                    if(this.board.countPieces(this.getCurrentPlayer()) == 0)
+                    if(this.board.countPiecesToPlay(this.getCurrentPlayer()) == 0)
                     {
                         this.board.setGameState("moving");
                     }
+                    break;
                 case "moving":
-                case "flying":
+                    if(this.board.countPiecesOnBoard(this.getCurrentPlayer()) == 3)
+                    {
+                        this.board.setGameState("flying");
+                    }
+                    break;
+            }
+
+            try
+            {
+                // TODO: distinguish between play and remove but save state so that illegal remove prompts for another
+                // remove.
+                this.getMove();
+                this.nextTurn();
+            }
+            catch(IllegalMoveException e)
+            {
+                this.view.displayError(e);
+            }
+        }
+    }
+
+    private void nextTurn()
+    {
+        for(Player p : this.players)
+        {
+            if(p != this.getCurrentPlayer())
+            {
+                this.setCurrentPlayer(p);
             }
         }
     }
@@ -44,7 +75,10 @@ public class GameController
 
     private void getMove() throws IllegalMoveException
     {
-        this.board.performMove(this.view.getMove());
+        // TODO: change player based on setting or removing.
+        Move move = this.view.getMove();
+        move.setPlayer(this.getCurrentPlayer());
+        this.board.performMove(move);
     }
 
     /**

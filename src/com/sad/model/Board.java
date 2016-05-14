@@ -175,15 +175,42 @@ public class Board
     }
 
     /**
-     * Counts the number of pieces a player has left.
+     * Counts the number of pieces a <b>player</b> has left.
      * 
      * @param player
      *            the player to count the number of pieces of.
      * @return the number of pieces <b>player</b> has left.
      */
-    public int countPieces(Player player)
+    public int countPiecesToPlay(Player player)
     {// knows how many pieces a player has left
         return this.pieces.get(player).size();
+    }
+
+    /**
+     * Counts the number of pieces on the board for <b>player</b>.
+     * 
+     * @param player
+     *            the player to count the pieces on the board of.
+     * @return the number of pieces on the board for <b>player</b>.
+     */
+    public int countPiecesOnBoard(Player player)
+    {
+        int count = 0;
+        for(Piece[] pieceRow : this.getBoard())
+        {
+            for(Piece p : pieceRow)
+            {
+                if(p != null && p != Piece.noPiece)
+                {
+                    if(p.getPlayer() == player)
+                    {
+                        count++;
+                    }
+                }
+            }
+        }
+
+        return count;
     }
 
     /**
@@ -235,43 +262,55 @@ public class Board
     {
         if(this.gameState.equalsIgnoreCase("flying"))
         {
-            int countPlayer1 = 0;
-            int countPlayer2 = 0;
-            Player player1 = null, player2 = null;
-            for(Piece[] pieceRow : this.getBoard())
-            {
-                for(Piece p : pieceRow)
-                {
-                    if(p != null && p != Piece.noPiece)
-                    {
-                        if(player1 == null)
-                        {
-                            player1 = p.getPlayer();
-                        }
-                        else if(player2 == null)
-                        {
-                            player2 = p.getPlayer();
-                        }
+            int minCount = this.getMinPiecesLeft();
 
-                        if(player1 == p.getPlayer())
-                        {
-                            countPlayer1++;
-                        }
-                        else if(player2 == p.getPlayer())
-                        {
-                            countPlayer2++;
-                        }
-                    }
-                }
-            }
-
-            if(countPlayer1 < 2 || countPlayer2 < 2)
+            if(minCount < 2)
             {
                 return true;
             }
         }
 
         return false;
+    }
+
+    /**
+     * Counts the number of pieces left for each player and returns the minimum.
+     * 
+     * @return the minimum number of pieces left for the players.
+     */
+    private int getMinPiecesLeft()
+    {
+        int countPlayer1 = 0;
+        int countPlayer2 = 0;
+        Player player1 = null, player2 = null;
+        for(Piece[] pieceRow : this.getBoard())
+        {
+            for(Piece p : pieceRow)
+            {
+                if(p != null && p != Piece.noPiece)
+                {
+                    if(player1 == null)
+                    {
+                        player1 = p.getPlayer();
+                    }
+                    else if(player2 == null)
+                    {
+                        player2 = p.getPlayer();
+                    }
+
+                    if(player1 == p.getPlayer())
+                    {
+                        countPlayer1++;
+                    }
+                    else if(player2 == p.getPlayer())
+                    {
+                        countPlayer2++;
+                    }
+                }
+            }
+        }
+
+        return countPlayer1 >= countPlayer2 ? countPlayer2 : countPlayer1;
     }
 
     /**
