@@ -90,6 +90,10 @@ public class Board
         }
         else if(move.getPreviousPieceLocation() == null)
         {// adding a piece for playerY
+            if(this.countPiecesToPlay(this.getCurrentPlayer()) == 0)
+            {
+                throw new IllegalMoveException("You have no more pieces left to play.");
+            }
             Piece pieceToSet = this.getPieceFrom(move.getPlayer());
             this.setPieceAt(move.getNewPieceLocation(), pieceToSet);
         }
@@ -117,39 +121,7 @@ public class Board
     {
         if(move.getPreviousPieceLocation() == null)
         {
-            for(int[] key : this.millMap.keySet())
-            {
-                boolean match = true;
-                for(int i = 0; i < key.length; i++)
-                {
-                    if(move.getNewPieceLocation()[i] != key[i])
-                    {
-                        match = false;
-                    }
-                }
-
-                if(match)
-                {
-                    for(int[][] mill : this.millMap.get(key))
-                    {
-                        boolean millFormed = true;
-
-                        for(int[] intersection : mill)
-                        {
-                            Piece thisPiece = this.getPieceAt(intersection);
-                            if(thisPiece == Piece.noPiece || thisPiece.getPlayer() != move.getPlayer())
-                            {
-                                millFormed &= false;
-                            }
-                        }
-
-                        if(millFormed)
-                        {
-                            return true;
-                        }
-                    }
-                }
-            }
+            return this.isMill(move.getPlayer(), move.getNewPieceLocation());
         }
 
         return false;
@@ -175,7 +147,8 @@ public class Board
         Piece currentPiece = this.board[location[0]][location[1]];
         if(currentPiece == null || currentPiece == Piece.noPiece)
         {
-            throw new IllegalMoveException("There is no piece to remove at " + location[0] + ", " + location[1] + ".");
+            throw new IllegalMoveException("There is no piece to remove at " + location[0] + 1 + ", " + location[1] + 1
+                    + ".");
         }
         else if(this.isMill(player, location) && this.isNonMillPieceOnBoard(player))
         {
@@ -190,7 +163,8 @@ public class Board
         Piece currentPiece = this.board[location[0]][location[1]];
         if(currentPiece == null || currentPiece == Piece.noPiece)
         {
-            throw new IllegalMoveException("There is no piece to remove at " + location[0] + ", " + location[1] + ".");
+            throw new IllegalMoveException("There is no piece to remove at " + location[0] + 1 + ", " + location[1] + 1
+                    + ".");
         }
         this.board[location[0]][location[1]] = Piece.noPiece;
     }
