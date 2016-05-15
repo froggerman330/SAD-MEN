@@ -241,6 +241,10 @@ public class Board
         {
             throw new IllegalMoveException("There are other non-mill forming pieces on the board to remove.");
         }
+        else if(currentPiece.getPlayer() == this.getController().getOtherPlayer(player))
+        {
+            throw new IllegalMoveException("You cannot remove your own piece.");
+        }
 
         this.removePiece(location);
     }
