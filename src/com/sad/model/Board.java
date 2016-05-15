@@ -94,6 +94,7 @@ public class Board
             {
                 throw new IllegalMoveException("You have no more pieces left to play.");
             }
+
             Piece pieceToSet = this.getPieceFrom(move.getPlayer());
             this.setPieceAt(move.getNewPieceLocation(), pieceToSet);
         }
