@@ -206,6 +206,10 @@ public class Board
         {
             return this.isMill(move.getPlayer(), move.getNewPieceLocation());
         }
+        else if(!this.getGameState().equals("placing") && move.getNewPieceLocation() != null)
+        {
+            return this.isMill(move.getPlayer(), move.getNewPieceLocation());
+        }
 
         return false;
     }

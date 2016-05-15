@@ -55,7 +55,8 @@ public class GameInterface
     {
         this.updateView(board);
 
-        System.out.println("Turn for player number " + board.getCurrentPlayerNumber() + ".\n");
+        System.out.println("Turn for player number " + board.getCurrentPlayerNumber() + ", game state is "
+                + board.getGameState() + ".\n");
 
         try
         {
