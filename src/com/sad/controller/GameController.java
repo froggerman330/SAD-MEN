@@ -59,17 +59,7 @@ public class GameController
 
             try
             {
-                // TODO: distinguish between play and remove but save state so
-                // that illegal remove prompts for another
-                // remove.
-                if(!this.isMillMade())
-                {
-                    this.board.performMove(this.getCurrentPlayer().getMove(this.board));
-                }
-                else
-                {
-                    this.getMillMove();
-                }
+                this.board.performMove(this.getCurrentPlayer().getMove(this.board));
 
                 this.nextTurn();
             }
@@ -78,26 +68,6 @@ public class GameController
                 this.view.displayError(e);
             }
         }
-    }
-
-    private void getMillMove()
-    {
-        // TODO Auto-generated method stub
-
-    }
-
-    /**
-     * 
-     * @return millMade.
-     */
-    private boolean isMillMade()
-    {
-        return this.millMade;
-    }
-
-    public void setMillMade(boolean millMade)
-    {
-        this.millMade = millMade;
     }
 
     private void nextTurn()

@@ -96,18 +96,63 @@ public class Board
         else
         {// moving a piece
             Piece currentPiece = this.getPieceAt(move.getPreviousPieceLocation());
-            if(currentPiece == null)
-                this.removePiece(move.getPreviousPieceLocation());
+            if(currentPiece == null || currentPiece.getPlayer() != this.getCurrentPlayer())
+            {
+                throw new IllegalMoveException("You do not have a piece there to move.");
+            }
+
+            this.removePiece(move.getPreviousPieceLocation());
             this.setPieceAt(move.getNewPieceLocation(), currentPiece);
         }
 
         this.history.addFirst(move);
 
-        if(this.isMill(move.getPlayer(), move.getNewPieceLocation()))
+        if(this.isMillMove(move))
         {
-            this.doMillFormed();
             throw new IllegalMoveException("Please select the move to remove an opponents piece.");
         }
+    }
+
+    private boolean isMillMove(Move move)
+    {
+        if(move.getPreviousPieceLocation() == null)
+        {
+            for(int[] key : this.millMap.keySet())
+            {
+                boolean match = true;
+                for(int i = 0; i < key.length; i++)
+                {
+                    if(move.getNewPieceLocation()[i] != key[i])
+                    {
+                        match = false;
+                    }
+                }
+
+                if(match)
+                {
+                    for(int[][] mill : this.millMap.get(key))
+                    {
+                        boolean millFormed = true;
+
+                        for(int[] intersection : mill)
+                        {
+                            Piece thisPiece = this.getPieceAt(intersection);
+                            if(thisPiece == Piece.noPiece || thisPiece.getPlayer() != move.getPlayer())
+                            {
+                                millFormed &= false;
+                            }
+                        }
+
+                        if(millFormed)
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -283,11 +328,6 @@ public class Board
         }
 
         return false;
-    }
-
-    private void doMillFormed()
-    {
-        this.getController().setMillMade(true);
     }
 
     /**
