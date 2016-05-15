@@ -42,7 +42,7 @@ public class GameInterface
             System.out.println("");
         }
 
-        System.out.println("\n\n");
+        System.out.println("");
     }
 
     public void displayError(Exception e)

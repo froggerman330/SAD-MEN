@@ -14,7 +14,6 @@ public class GameController
     private Board board;
     private Player[] players = new Player[2];
     private GameInterface view;
-    private boolean millMade;
 
     public GameController()
     {
