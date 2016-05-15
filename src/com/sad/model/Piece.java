@@ -7,7 +7,7 @@ public class Piece
     /**
      * Represents an empty board location.
      */
-    public static Piece noPiece;
+    public static Piece noPiece = new Piece(null);
 
     /**
      * Constructor for piece, sets the piece owner.

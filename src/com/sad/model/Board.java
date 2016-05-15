@@ -3,6 +3,7 @@ package com.sad.model;
 import java.util.HashMap;
 import java.util.LinkedList;
 
+import com.sad.controller.GameController;
 import com.sad.data.Move;
 import com.sad.framework.exceptions.IllegalMoveException;
 
@@ -18,15 +19,14 @@ public class Board
     private String gameState = "placing"; // also moving and flying
     private LinkedList<Move> history = new LinkedList<Move>();
     private HashMap<Player, LinkedList<Piece>> pieces = new HashMap<Player, LinkedList<Piece>>();
-    HashMap<int[], int[][][]> millMap = new HashMap<int[], int[][][]>();
+    private HashMap<int[], int[][][]> millMap = new HashMap<int[], int[][][]>();
+    private GameController controller;
 
     /**
      * Constructor for the board. Takes each player and makes nine pieces for each player. Also initializes the millmap.
      * 
      * @param players
      *            the piece owners.
-     * @param controller
-     *            the game controller.
      */
     public Board(Player[] players)
     {
@@ -42,6 +42,11 @@ public class Board
         }
 
         this.initializeMills();
+    }
+
+    public Player getCurrentPlayer()
+    {
+        return this.getController().getCurrentPlayer();
     }
 
     /**
@@ -78,25 +83,30 @@ public class Board
 
     public void performMove(Move move) throws IllegalMoveException
     {
-        // TODO: make move and throw exception if illegal move
+        // TODO: make moving a piece branch and throw exception if illegal move
         if(move.getNewPieceLocation() == null)
-        {// removing a piece from playerX
-            this.removePieceAt(move.getPlayer(), move.getPreviousPieceLocation());
+        {// removing a piece from other player
+            this.removePieceAt(this.getController().getOtherPlayer(move.getPlayer()), move.getPreviousPieceLocation());
         }
         else if(move.getPreviousPieceLocation() == null)
         {// adding a piece for playerY
-            this.setPieceAt(move.getNewPieceLocation(), this.getPieceFrom(move.getPlayer()));
+            Piece pieceToSet = this.getPieceFrom(move.getPlayer());
+            this.setPieceAt(move.getNewPieceLocation(), pieceToSet);
         }
         else
         {// moving a piece
-
+            Piece currentPiece = this.getPieceAt(move.getPreviousPieceLocation());
+            if(currentPiece == null)
+                this.removePiece(move.getPreviousPieceLocation());
+            this.setPieceAt(move.getNewPieceLocation(), currentPiece);
         }
 
-        this.history.add(move);
+        this.history.addFirst(move);
 
         if(this.isMill(move.getPlayer(), move.getNewPieceLocation()))
         {
             this.doMillFormed();
+            throw new IllegalMoveException("Please select the move to remove an opponents piece.");
         }
     }
 
@@ -112,6 +122,11 @@ public class Board
      */
     private void removePieceAt(Player player, int[] location) throws IllegalMoveException
     {
+        if(location == null)
+        {
+            throw new IllegalMoveException("You must enter at least one location.");
+        }
+
         Piece currentPiece = this.board[location[0]][location[1]];
         if(currentPiece == null || currentPiece == Piece.noPiece)
         {
@@ -122,6 +137,16 @@ public class Board
             throw new IllegalMoveException("There are other non-mill forming pieces on the board to remove.");
         }
 
+        this.removePiece(location);
+    }
+
+    private void removePiece(int[] location) throws IllegalMoveException
+    {
+        Piece currentPiece = this.board[location[0]][location[1]];
+        if(currentPiece == null || currentPiece == Piece.noPiece)
+        {
+            throw new IllegalMoveException("There is no piece to remove at " + location[0] + ", " + location[1] + ".");
+        }
         this.board[location[0]][location[1]] = Piece.noPiece;
     }
 
@@ -223,24 +248,37 @@ public class Board
      */
     private boolean isMill(Player player, int[] location)
     {
-        for(int[][] mill : this.millMap.get(location))
+        for(int[] key : this.millMap.keySet())
         {
-            boolean millFormed = true;
-
-            for(int[] intersection : mill)
+            boolean match = true;
+            for(int i = 0; i < key.length; i++)
             {
-                if(this.getPieceAt(intersection) != Piece.noPiece)
+                if(location[i] != key[i])
                 {
-                    if(this.getPieceAt(intersection).getPlayer() != player)
-                    {
-                        millFormed = millFormed & false;
-                    }
+                    match = false;
                 }
             }
 
-            if(millFormed)
+            if(match)
             {
-                return true;
+                for(int[][] mill : this.millMap.get(key))
+                {
+                    boolean millFormed = true;
+
+                    for(int[] intersection : mill)
+                    {
+                        Piece thisPiece = this.getPieceAt(intersection);
+                        if(thisPiece == Piece.noPiece || thisPiece.getPlayer() != player)
+                        {
+                            millFormed &= false;
+                        }
+                    }
+
+                    if(millFormed)
+                    {
+                        return true;
+                    }
+                }
             }
         }
 
@@ -249,8 +287,7 @@ public class Board
 
     private void doMillFormed()
     {
-        // TODO: pass to controller to get more input.
-
+        this.getController().setMillMade(true);
     }
 
     /**
@@ -365,13 +402,48 @@ public class Board
      * @throws IllegalMoveException
      *             if there is already a piece at the <b>location</b>.
      */
-    public void setPieceAt(int[] location, Piece piece) throws IllegalMoveException
+    private void setPieceAt(int[] location, Piece piece) throws IllegalMoveException
     {
         Piece currentPiece = this.board[location[0]][location[1]];
         if(currentPiece != Piece.noPiece)
         {
+            this.pieces.get(this.getCurrentPlayer()).add(piece);
             throw new IllegalMoveException("There is already a piece at " + location[0] + ", " + location[1] + ".");
         }
-        currentPiece = piece;
+        else if(currentPiece == null)
+        {
+            this.pieces.get(this.getCurrentPlayer()).add(piece);
+            throw new IllegalMoveException("You cannot play a piece at " + location[0] + ", " + location[1] + ".");
+        }
+
+        this.board[location[0]][location[1]] = piece;
+    }
+
+    /**
+     * @return the controller
+     */
+    public GameController getController()
+    {
+        return this.controller;
+    }
+
+    public void setGameController(GameController controller)
+    {
+        this.controller = controller;
+    }
+
+    /**
+     * @param playerNumber
+     *            the player number (for player 1 or player 2).
+     * @return the player with number <b>playerNumber</b>
+     */
+    public Player getPlayer(int playerNumber)
+    {
+        return this.getController().getPlayer(playerNumber);
+    }
+
+    public int getCurrentPlayerNumber()
+    {
+        return this.getController().getCurrentPlayerNumber();
     }
 }

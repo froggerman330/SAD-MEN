@@ -7,7 +7,10 @@ public abstract class Player
 {
     protected GameController controller;
 
-    public abstract Move movePiece();
+    public abstract Move getMove(Board board);
 
-    public abstract Move removePiece();
+    public void setGameController(GameController gameController)
+    {
+        this.controller = gameController;
+    }
 }

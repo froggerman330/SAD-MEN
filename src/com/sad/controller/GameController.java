@@ -10,115 +10,140 @@ import com.sad.view.GameInterface;
 
 public class GameController
 {
-	private Player currentPlayer = null;
-	private Board board;
-	private Player[] players;
-	private GameInterface view;
+    private Player currentPlayer = null;
+    private Board board;
+    private Player[] players = new Player[2];
+    private GameInterface view;
+    private boolean millMade;
 
-	public GameController()
-	{
-		this.view = new GameInterface();
-		GameParams gameParams = this.view.getGameParams();
-		PlayerFactory pf = PlayerFactory.getInstance();
-		players[0] = pf.buildPlayer(this, gameParams.getPlayer1());
-		players[1] = pf.buildPlayer(this, gameParams.getPlayer2());
-		this.board = new Board(players);
-		this.startGameLoop();
-	}
+    public GameController()
+    {
+        this.view = new GameInterface();
+        GameParams gameParams = this.view.getGameParams();
+        this.players[0] = PlayerFactory.buildPlayer(gameParams.getPlayer1());
+        this.players[1] = PlayerFactory.buildPlayer(gameParams.getPlayer2());
+        this.board = new Board(this.players);
+        this.setCurrentPlayer(this.players[0]);
+        this.startGameLoop();
+    }
 
-	private void startGameLoop()
-	{
-		while(!this.isGameOver())
-		{
-			// Change game state
-			switch(this.board.getGameState())
-			{
-				case "placing":
-					if(this.board.countPiecesToPlay(this.getCurrentPlayer()) == 0)
-					{
-						this.board.setGameState("moving");
-					}
-					break;
-				case "moving":
-					if(this.board.countPiecesOnBoard(this.getCurrentPlayer()) == 3)
-					{
-						this.board.setGameState("flying");
-					}
-					break;
-			}
+    public static void main(String[] args)
+    {
+        new GameController();
+    }
 
-			try
-			{
-				// TODO: distinguish between play and remove but save state so
-				// that illegal remove prompts for another
-				// remove.
-				if(!this.isMillMade())
-				{
-					this.getMove();
-				}
-				else
-				{
-					this.getMillMove();
-				}
+    private void startGameLoop()
+    {
+        this.players[0].setGameController(this);
+        this.players[1].setGameController(this);
+        this.board.setGameController(this);
 
-				this.nextTurn();
-			}
-			catch(IllegalMoveException e)
-			{
-				this.view.displayError(e);
-			}
-		}
-	}
+        while(!this.isGameOver())
+        {
+            // Change game state
+            switch(this.board.getGameState())
+            {
+                case "placing":
+                    if(this.board.countPiecesToPlay(this.getCurrentPlayer()) == 0)
+                    {
+                        this.board.setGameState("moving");
+                    }
+                    break;
+                case "moving":
+                    if(this.board.countPiecesOnBoard(this.getCurrentPlayer()) == 3)
+                    {
+                        this.board.setGameState("flying");
+                    }
+                    break;
+            }
 
-	private void getMillMove()
-	{
-		// TODO Auto-generated method stub
+            try
+            {
+                // TODO: distinguish between play and remove but save state so
+                // that illegal remove prompts for another
+                // remove.
+                if(!this.isMillMade())
+                {
+                    this.board.performMove(this.getCurrentPlayer().getMove(this.board));
+                }
+                else
+                {
+                    this.getMillMove();
+                }
 
-	}
+                this.nextTurn();
+            }
+            catch(IllegalMoveException e)
+            {
+                this.view.displayError(e);
+            }
+        }
+    }
 
-	private boolean isMillMade()
-	{
-		// TODO Auto-generated method stub
-		return false;
-	}
+    private void getMillMove()
+    {
+        // TODO Auto-generated method stub
 
-	private void nextTurn()
-	{
-		for(Player p : this.players)
-		{
-			if(p != this.getCurrentPlayer())
-			{
-				this.setCurrentPlayer(p);
-			}
-		}
-	}
+    }
 
-	private boolean isGameOver()
-	{
-		return this.board.isGameOver();
-	}
+    /**
+     * 
+     * @return millMade.
+     */
+    private boolean isMillMade()
+    {
+        return this.millMade;
+    }
 
-	private void getMove() throws IllegalMoveException
-	{
-		Move move = this.view.getMove();
-		move.setPlayer(this.getCurrentPlayer());
-		this.board.performMove(move);
-	}
+    public void setMillMade(boolean millMade)
+    {
+        this.millMade = millMade;
+    }
 
-	/**
-	 * @return the currentPlayer
-	 */
-	public Player getCurrentPlayer()
-	{
-		return this.currentPlayer;
-	}
+    private void nextTurn()
+    {
+        this.setCurrentPlayer(this.getOtherPlayer(this.getCurrentPlayer()));
+    }
 
-	/**
-	 * @param currentPlayer
-	 *            the currentPlayer to set
-	 */
-	public void setCurrentPlayer(Player currentPlayer)
-	{
-		this.currentPlayer = currentPlayer;
-	}
+    private boolean isGameOver()
+    {
+        return this.board.isGameOver();
+    }
+
+    public Move getMoveFromUser(Board board)
+    {
+        return this.view.getMoveFromUser(board);
+    }
+
+    /**
+     * @return the currentPlayer
+     */
+    public Player getCurrentPlayer()
+    {
+        return this.currentPlayer;
+    }
+
+    public Player getOtherPlayer(Player player)
+    {
+        return player == this.players[0] ? this.players[1] : this.players[0];
+    }
+
+    /**
+     * @param currentPlayer
+     *            the currentPlayer to set
+     */
+    private void setCurrentPlayer(Player currentPlayer)
+    {
+        this.currentPlayer = currentPlayer;
+    }
+
+    public Player getPlayer(int playerNumber)
+    {
+        return this.players[playerNumber - 1];
+    }
+
+    public int getCurrentPlayerNumber()
+    {
+        return this.getCurrentPlayer() == this.players[0] ? 1 : 2;
+    }
 }
