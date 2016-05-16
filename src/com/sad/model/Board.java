@@ -96,9 +96,13 @@ public class Board
 		}
 		else if(move.getPreviousPieceLocation() == null)
 		{// adding a piece for playerY
-			if(this.history.peek().getPlayer() == this.getCurrentPlayer())
+			if(!this.history.isEmpty())
 			{
-				throw new IllegalMoveException("You may not place a piece instead of removing one for forming a mill.");
+				if(this.history.peek().getPlayer() == this.getCurrentPlayer())
+				{
+					throw new IllegalMoveException(
+							"You may not place a piece instead of removing one for forming a mill.");
+				}
 			}
 
 			if(this.countPiecesToPlay(this.getCurrentPlayer()) == 0)
