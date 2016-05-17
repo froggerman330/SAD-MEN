@@ -86,8 +86,8 @@ public class GameController
 			}
 		}
 
-		this.view.displayMessage("Game is over. Player "
-				+ this.getPlayerNumber(this.getOtherPlayer(getCurrentPlayer())) + " won.");
+		this.view.displayMessage(
+				"Game is over. Player " + this.getPlayerNumber(this.getOtherPlayer(getCurrentPlayer())) + " won.");
 	}
 
 	private void nextTurn()
@@ -151,6 +151,11 @@ public class GameController
 	private int getPlayerNumber(Player player)
 	{
 		return players[0] == player ? 1 : 0;
+	}
+
+	public Board getBoard()
+	{
+		return this.board;
 	}
 
 	/**

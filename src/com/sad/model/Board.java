@@ -78,8 +78,8 @@ public class Board
 		this.millMap.put(new int[] { 3, 5 }, new int[][][] { { { 3, 4 }, { 3, 6 } }, { { 1, 5 }, { 5, 5 } } });
 		this.millMap.put(new int[] { 3, 6 }, new int[][][] { { { 3, 4 }, { 3, 5 } }, { { 2, 4 }, { 4, 4 } } });
 		this.millMap.put(new int[] { 4, 2 }, new int[][][] { { { 4, 3 }, { 4, 4 } }, { { 2, 2 }, { 3, 2 } } });
-		this.millMap.put(new int[] { 4, 3 }, new int[][][] { { { 2, 2 }, { 2, 4 } }, { { 5, 3 }, { 6, 3 } } });
-		this.millMap.put(new int[] { 4, 4 }, new int[][][] { { { 2, 2 }, { 2, 3 } }, { { 2, 4 }, { 3, 4 } } });
+		this.millMap.put(new int[] { 4, 3 }, new int[][][] { { { 4, 2 }, { 4, 4 } }, { { 5, 3 }, { 6, 3 } } });
+		this.millMap.put(new int[] { 4, 4 }, new int[][][] { { { 4, 2 }, { 4, 3 } }, { { 2, 4 }, { 3, 4 } } });
 		this.millMap.put(new int[] { 5, 1 }, new int[][][] { { { 5, 3 }, { 5, 5 } }, { { 1, 1 }, { 3, 1 } } });
 		this.millMap.put(new int[] { 5, 3 }, new int[][][] { { { 5, 1 }, { 5, 5 } }, { { 4, 3 }, { 6, 3 } } });
 		this.millMap.put(new int[] { 5, 5 }, new int[][][] { { { 5, 1 }, { 5, 3 } }, { { 1, 5 }, { 3, 5 } } });
@@ -131,7 +131,8 @@ public class Board
 			}
 
 			Piece currentPiece = this.getPieceAt(move.getPreviousPieceLocation());
-			if(currentPiece == null || currentPiece.getPlayer() != this.getCurrentPlayer())
+			if(currentPiece == null || currentPiece.getPlayer() != this.getCurrentPlayer()
+					|| currentPiece == Piece.noPiece)
 			{
 				throw new IllegalMoveException("You do not have a piece there to move.");
 			}
@@ -142,8 +143,9 @@ public class Board
 				int[] loc2 = move.getNewPieceLocation();
 				if(loc2[0] != loc1[0] && loc2[1] != loc1[1])
 				{
-					throw new IllegalMoveException("You cannot move a piece from (" + loc1[0] + ", " + loc1[1] + ") to "
-							+ "(" + loc2[0] + ", " + loc2[1] + ") until you can fly.");
+					throw new IllegalMoveException(
+							"You cannot move a piece from (" + (loc1[0] + 1) + ", " + (loc1[1] + 1) + ") to " + "("
+									+ (loc2[0] + 1) + ", " + (loc2[1] + 1) + ") until you can fly.");
 				}
 
 				if(loc2[0] != loc1[0])
@@ -153,27 +155,31 @@ public class Board
 						case 1:
 							if(loc2[1] != 2 && loc2[1] != 3 && loc2[1] != 4)
 							{
-								throw new IllegalMoveException("You cannot move a piece from (" + loc1[0] + ", "
-										+ loc1[1] + ") to " + "(" + loc2[0] + ", " + loc2[1] + ") until you can fly.");
+								throw new IllegalMoveException("You cannot move a piece from (" + (loc1[0] + 1) + ", "
+										+ (loc1[1] + 1) + ") to " + "(" + (loc2[0] + 1) + ", " + (loc2[1] + 1)
+										+ ") until you can fly.");
 							}
 							break;
 						case 2:
 							if(loc2[1] != 1 && loc2[1] != 5)
 							{
-								throw new IllegalMoveException("You cannot move a piece from (" + loc1[0] + ", "
-										+ loc1[1] + ") to " + "(" + loc2[0] + ", " + loc2[1] + ") until you can fly.");
+								throw new IllegalMoveException("You cannot move a piece from (" + (loc1[0] + 1) + ", "
+										+ (loc1[1] + 1) + ") to " + "(" + (loc2[0] + 1) + ", " + (loc2[1] + 1)
+										+ ") until you can fly.");
 							}
 							break;
 						case 3:
 							if(loc2[1] != 0 && loc2[1] != 6)
 							{
-								throw new IllegalMoveException("You cannot move a piece from (" + loc1[0] + ", "
-										+ loc1[1] + ") to " + "(" + loc2[0] + ", " + loc2[1] + ") until you can fly.");
+								throw new IllegalMoveException("You cannot move a piece from (" + (loc1[0] + 1) + ", "
+										+ (loc1[1] + 1) + ") to " + "(" + (loc2[0] + 1) + ", " + (loc2[1] + 1)
+										+ ") until you can fly.");
 							}
 							break;
 						default:
-							throw new IllegalMoveException("You cannot move a piece from (" + loc1[0] + ", " + loc1[1]
-									+ ") to " + "(" + loc2[0] + ", " + loc2[1] + ") until you can fly.");
+							throw new IllegalMoveException(
+									"You cannot move a piece from (" + (loc1[0] + 1) + ", " + (loc1[1] + 1) + ") to "
+											+ "(" + (loc2[0] + 1) + ", " + (loc2[1] + 1) + ") until you can fly.");
 					}
 				}
 				else
@@ -183,27 +189,31 @@ public class Board
 						case 1:
 							if(loc2[0] != 2 && loc2[0] != 3 && loc2[0] != 4)
 							{
-								throw new IllegalMoveException("You cannot move a piece from (" + loc1[1] + ", "
-										+ loc1[0] + ") to " + "(" + loc2[1] + ", " + loc2[0] + ") until you can fly.");
+								throw new IllegalMoveException("You cannot move a piece from (" + (loc1[0] + 1) + ", "
+										+ (loc1[1] + 1) + ") to " + "(" + (loc2[0] + 1) + ", " + (loc2[1] + 1)
+										+ ") until you can fly.");
 							}
 							break;
 						case 2:
 							if(loc2[0] != 1 && loc2[0] != 5)
 							{
-								throw new IllegalMoveException("You cannot move a piece from (" + loc1[1] + ", "
-										+ loc1[0] + ") to " + "(" + loc2[1] + ", " + loc2[0] + ") until you can fly.");
+								throw new IllegalMoveException("You cannot move a piece from (" + (loc1[0] + 1) + ", "
+										+ (loc1[1] + 1) + ") to " + "(" + (loc2[0] + 1) + ", " + (loc2[1] + 1)
+										+ ") until you can fly.");
 							}
 							break;
 						case 3:
 							if(loc2[0] != 0 && loc2[0] != 6)
 							{
-								throw new IllegalMoveException("You cannot move a piece from (" + loc1[1] + ", "
-										+ loc1[0] + ") to " + "(" + loc2[1] + ", " + loc2[0] + ") until you can fly.");
+								throw new IllegalMoveException("You cannot move a piece from (" + (loc1[0] + 1) + ", "
+										+ (loc1[1] + 1) + ") to " + "(" + (loc2[0] + 1) + ", " + (loc2[1] + 1)
+										+ ") until you can fly.");
 							}
 							break;
 						default:
-							throw new IllegalMoveException("You cannot move a piece from (" + loc1[1] + ", " + loc1[0]
-									+ ") to " + "(" + loc2[1] + ", " + loc2[0] + ") until you can fly.");
+							throw new IllegalMoveException(
+									"You cannot move a piece from (" + (loc1[0] + 1) + ", " + (loc1[1] + 1) + ") to "
+											+ "(" + (loc2[0] + 1) + ", " + (loc2[1] + 1) + ") until you can fly.");
 					}
 				}
 			}
@@ -396,18 +406,18 @@ public class Board
 			{
 				for(int[][] mill : this.millMap.get(key))
 				{
-					boolean millFormed = true;
+					boolean isMill = true;
 
 					for(int[] intersection : mill)
 					{
 						Piece thisPiece = this.getPieceAt(intersection);
 						if(thisPiece == Piece.noPiece || thisPiece.getPlayer() != player)
 						{
-							millFormed &= false;
+							isMill &= false;
 						}
 					}
 
-					if(millFormed)
+					if(isMill)
 					{
 						return true;
 					}
@@ -428,9 +438,9 @@ public class Board
 	{
 		if(this.gameState.equalsIgnoreCase("flying"))
 		{
-			int minCount = this.getMinPiecesLeft();
+			int minCount = this.getMinPiecesOnBoard();
 
-			if(minCount < 2)
+			if(minCount == 2)
 			{
 				return true;
 			}
@@ -444,7 +454,7 @@ public class Board
 	 * 
 	 * @return the minimum number of pieces left for the players.
 	 */
-	private int getMinPiecesLeft()
+	private int getMinPiecesOnBoard()
 	{
 		int countPlayer1 = 0;
 		int countPlayer2 = 0;
@@ -454,11 +464,11 @@ public class Board
 			{
 				if(p != null && p != Piece.noPiece)
 				{
-					if(this.getController().getPlayer(0) == p.getPlayer())
+					if(this.getController().getPlayer(1) == p.getPlayer())
 					{
 						countPlayer1++;
 					}
-					else if(this.getController().getPlayer(1) == p.getPlayer())
+					else if(this.getController().getPlayer(2) == p.getPlayer())
 					{
 						countPlayer2++;
 					}
@@ -519,25 +529,32 @@ public class Board
 	 * @param piece
 	 *            the piece to set on the board in <b>location</b>.
 	 * @throws IllegalMoveException
-	 *             if there is already a piece at the <b>location</b>.
+	 *             if there is already a piece at, or you cannot play a piece
+	 *             at, the <b>location</b>.
 	 */
 	private void setPieceAt(int[] location, Piece piece) throws IllegalMoveException
 	{
 		Piece currentPiece = this.board[location[0]][location[1]];
-		if(currentPiece != Piece.noPiece)
+		if(currentPiece == Piece.noPiece)
 		{
-			this.pieces.get(this.getCurrentPlayer()).add(piece);
-			throw new IllegalMoveException(
-					"There is already a piece at " + (location[0] + 1) + ", " + (location[1] + 1) + ".");
+			this.board[location[0]][location[1]] = piece;
 		}
 		else if(currentPiece == null)
 		{
-			this.pieces.get(this.getCurrentPlayer()).add(piece);
+			if(this.getGameState().equals("placing"))
+			{
+				this.pieces.get(this.getCurrentPlayer()).add(piece);
+			}
 			throw new IllegalMoveException(
 					"You cannot play a piece at " + (location[0] + 1) + ", " + (location[1] + 1) + ".");
 		}
 
-		this.board[location[0]][location[1]] = piece;
+		if(this.getGameState().equals("placing"))
+		{
+			this.pieces.get(this.getCurrentPlayer()).add(piece);
+		}
+		throw new IllegalMoveException(
+				"There is already a piece at " + (location[0] + 1) + ", " + (location[1] + 1) + ".");
 	}
 
 	/**
@@ -566,5 +583,10 @@ public class Board
 	public int getCurrentPlayerNumber()
 	{
 		return this.getController().getCurrentPlayerNumber();
+	}
+
+	public int getTurnCount()
+	{
+		return this.getController().getTurnCount();
 	}
 }

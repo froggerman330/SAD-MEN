@@ -30,7 +30,7 @@ public class GameInterface
 
 	private void printBoard()
 	{
-		System.out.println(horizontalCols);
+		System.out.println("\n" + horizontalCols);
 		for(int i = 0; i < this.boardView.length; i++)
 		{// each row
 			System.out.print(verticalRows[i]);
@@ -51,6 +51,7 @@ public class GameInterface
 
 	public void displayMessage(String msg)
 	{
+		System.out.println("\n !MESSAGE FROM SYSTEM:");
 		System.out.println(msg);
 	}
 
@@ -58,16 +59,18 @@ public class GameInterface
 	{
 		this.updateView(board);
 
-		System.out.println("Turn " + board.getController().getTurnCount() + " for player number "
-				+ board.getCurrentPlayerNumber() + ", game state is " + board.getGameState() + ".\n");
+		System.out.println("Turn " + board.getTurnCount() + " for player number " + board.getCurrentPlayerNumber()
+				+ ", game state is " + board.getGameState() + ".\n");
 
 		try
 		{
 			BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 			System.out.println("Please enter piece starting location x,y (or blank for playing a new piece)");
 			String startingLocation = in.readLine().toLowerCase();
+			System.out.println("You entered: " + startingLocation);
 			System.out.println("Please enter desired piece location x,y (or blank for removing a piece)");
 			String desiredLocation = in.readLine().toLowerCase();
+			System.out.println("You entered: " + desiredLocation);
 			int[][] locations = this.parseMove(startingLocation, desiredLocation);
 			return new Move(locations[0], locations[1], board.getCurrentPlayer());
 		}

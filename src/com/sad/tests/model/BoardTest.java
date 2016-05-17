@@ -1,17 +1,22 @@
 package com.sad.tests.model;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
+import com.sad.controller.GameController;
 import com.sad.model.Board;
-import com.sad.model.HumanPlayer;
 import com.sad.model.Piece;
-import com.sad.model.Player;
 
 public class BoardTest
 {
-	private Player player1 = new HumanPlayer();
-	private Player player2 = new HumanPlayer();
-	private Board board = new Board(new Player[] { player1, player2 });
+	GameController controller = new GameController();
+	Board board = controller.getBoard();
+
+	@Before
+	public void setup()
+	{
+		this.board.setGameController(this.controller);
+	}
 
 	private void setNmuberOfPiecesOnBoard(int player1pieces, int player2pieces)
 	{
@@ -26,11 +31,11 @@ public class BoardTest
 				{
 					if(piecesForPlayer1 > 0)
 					{
-						p.setPlayer(this.player1);
+						p.setPlayer(this.controller.getPlayer(1));
 					}
 					else if(piecesForPlayer2 > 0)
 					{
-						p.setPlayer(player2);
+						p.setPlayer(this.controller.getPlayer(2));
 					}
 				}
 			}
@@ -47,7 +52,7 @@ public class BoardTest
 				{
 					if(loc[0] - 1 == i && loc[1] - 1 == j)
 					{
-						this.board.getBoard()[i][j] = new Piece(player1);
+						this.board.getBoard()[i][j] = new Piece(this.controller.getPlayer(1));
 					}
 				}
 
@@ -55,7 +60,7 @@ public class BoardTest
 				{
 					if(loc[0] - 1 == i && loc[1] - 1 == j)
 					{
-						this.board.getBoard()[i][j] = new Piece(player2);
+						this.board.getBoard()[i][j] = new Piece(this.controller.getPlayer(2));
 					}
 				}
 			}
@@ -66,16 +71,16 @@ public class BoardTest
 	public void testCountPiecesOnEmptyBoard()
 	{
 		setNmuberOfPiecesOnBoard(0, 0);
-		Assert.assertTrue(board.countPiecesOnBoard(player1) == 0);
-		Assert.assertTrue(board.countPiecesOnBoard(player2) == 0);
+		Assert.assertTrue(board.countPiecesOnBoard(this.controller.getPlayer(1)) == 0);
+		Assert.assertTrue(board.countPiecesOnBoard(this.controller.getPlayer(2)) == 0);
 	}
 
 	@Test
 	public void testCountPiecesOnBoardWithFourPiecesForPlayerOneAndThreeForPlayerTwo()
 	{
 		setNmuberOfPiecesOnBoard(4, 3);
-		Assert.assertTrue(board.countPiecesOnBoard(player1) == 4);
-		Assert.assertTrue(board.countPiecesOnBoard(player2) == 3);
+		Assert.assertTrue(board.countPiecesOnBoard(this.controller.getPlayer(1)) == 4);
+		Assert.assertTrue(board.countPiecesOnBoard(this.controller.getPlayer(2)) == 3);
 	}
 
 	@Test
