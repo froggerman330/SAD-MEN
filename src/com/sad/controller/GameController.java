@@ -59,27 +59,25 @@ public class GameController
 
 		while(!this.isGameOver())
 		{
-			// Change game state
-			switch(this.board.getGameState())
+
+			if(this.board.countPiecesToPlay(this.getCurrentPlayer()) == 0)
 			{
-				case "placing":
-					if(this.board.countPiecesToPlay(this.getCurrentPlayer()) == 0)
-					{
-						this.board.setGameState("moving");
-					}
-					break;
-				case "moving":
-					if(this.board.countPiecesOnBoard(this.getCurrentPlayer()) == 3)
-					{
-						this.board.setGameState("flying");
-					}
-					break;
+				this.board.setGameState("moving");
+			}
+			else
+			{
+				this.board.setGameState("placing");
+			}
+
+			if(this.board.getGameState().equals("moving")
+					&& this.board.countPiecesOnBoard(this.getCurrentPlayer()) == 3)
+			{
+				this.board.setGameState("flying");
 			}
 
 			try
 			{
 				this.board.performMove(this.getCurrentPlayer().getMove(this.board));
-
 				this.nextTurn();
 			}
 			catch(IllegalMoveException e)

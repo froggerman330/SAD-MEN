@@ -85,7 +85,7 @@ public class Board
 
 	public void performMove(Move move) throws IllegalMoveException
 	{
-		if(move.getNewPieceLocation() == null)
+		if(move.getNewPieceLocation() != null)
 		{// removing a piece from other player
 			if(this.history.peek().getPlayer() != this.getCurrentPlayer())
 			{
