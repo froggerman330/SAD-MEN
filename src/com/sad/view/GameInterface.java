@@ -46,8 +46,12 @@ public class GameInterface
 
 	public void displayError(Exception e)
 	{
-		// switch(e)
-		System.out.println(e.getMessage());
+		this.displayMessage(e.getMessage());
+	}
+
+	public void displayMessage(String msg)
+	{
+		System.out.println(msg);
 	}
 
 	public Move getMoveFromUser(Board board)

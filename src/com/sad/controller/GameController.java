@@ -34,8 +34,6 @@ public class GameController
 		this.players[0] = PlayerFactory.buildPlayer(gameParams.getPlayer1());
 		this.players[1] = PlayerFactory.buildPlayer(gameParams.getPlayer2());
 		this.board = new Board(this.players);
-		this.setCurrentPlayer(this.players[0]);
-		this.startGameLoop();
 	}
 
 	/**
@@ -46,7 +44,7 @@ public class GameController
 	 */
 	public static void main(String[] args)
 	{
-		new GameController();
+		new GameController().startGameLoop();
 	}
 
 	/**
@@ -54,6 +52,7 @@ public class GameController
 	 */
 	private void startGameLoop()
 	{
+		this.setCurrentPlayer(this.players[0]);
 		this.players[0].setGameController(this);
 		this.players[1].setGameController(this);
 		this.board.setGameController(this);
@@ -86,6 +85,9 @@ public class GameController
 				this.view.displayError(e);
 			}
 		}
+
+		this.view.displayMessage("Game is over. Player "
+				+ this.getPlayerNumber(this.getOtherPlayer(getCurrentPlayer())) + " won.");
 	}
 
 	private void nextTurn()
@@ -144,6 +146,11 @@ public class GameController
 	public int getCurrentPlayerNumber()
 	{
 		return this.getCurrentPlayer() == this.players[0] ? 1 : 2;
+	}
+
+	private int getPlayerNumber(Player player)
+	{
+		return players[0] == player ? 1 : 0;
 	}
 
 	/**

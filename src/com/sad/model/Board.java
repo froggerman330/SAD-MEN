@@ -44,6 +44,11 @@ public class Board
 		this.initializeMills();
 	}
 
+	public void setBoard(Piece[][] board)
+	{
+		this.board = board;
+	}
+
 	public Player getCurrentPlayer()
 	{
 		return this.getController().getCurrentPlayer();
@@ -250,8 +255,8 @@ public class Board
 		Piece currentPiece = this.board[location[0]][location[1]];
 		if(currentPiece == null || currentPiece == Piece.noPiece)
 		{
-			throw new IllegalMoveException(
-					"There is no piece to remove at " + (location[0] + 1) + ", " + (location[1] + 1) + ".");
+			throw new IllegalMoveException("There is no piece to remove at " + (location[0] + 1) + ", "
+					+ (location[1] + 1) + ". Please select another piece.");
 		}
 		else if(this.isMill(player, location) && this.isNonMillPieceOnBoard(player))
 		{
@@ -443,27 +448,17 @@ public class Board
 	{
 		int countPlayer1 = 0;
 		int countPlayer2 = 0;
-		Player player1 = null, player2 = null;
 		for(Piece[] pieceRow : this.getBoard())
 		{
 			for(Piece p : pieceRow)
 			{
 				if(p != null && p != Piece.noPiece)
 				{
-					if(player1 == null)
-					{
-						player1 = p.getPlayer();
-					}
-					else if(player2 == null)
-					{
-						player2 = p.getPlayer();
-					}
-
-					if(player1 == p.getPlayer())
+					if(this.getController().getPlayer(0) == p.getPlayer())
 					{
 						countPlayer1++;
 					}
-					else if(player2 == p.getPlayer())
+					else if(this.getController().getPlayer(1) == p.getPlayer())
 					{
 						countPlayer2++;
 					}
