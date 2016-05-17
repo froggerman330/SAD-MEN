@@ -21,6 +21,7 @@ public class GameController
 	private Board board;
 	private Player[] players = new Player[2];
 	private GameInterface view;
+	private int turnCount = 1;
 
 	/**
 	 * Constructor sets up the view and gets the players from it before building
@@ -89,6 +90,10 @@ public class GameController
 
 	private void nextTurn()
 	{
+		if(this.getCurrentPlayer() == this.getPlayer(2))
+		{
+			this.turnCount++;
+		}
 		this.setCurrentPlayer(this.getOtherPlayer(this.getCurrentPlayer()));
 	}
 
@@ -124,6 +129,13 @@ public class GameController
 		this.currentPlayer = currentPlayer;
 	}
 
+	/**
+	 * Gets the player associated with the player number (not index)
+	 * 
+	 * @param playerNumber
+	 *            the player number (not index)
+	 * @return the player with that player number (not index)
+	 */
 	public Player getPlayer(int playerNumber)
 	{
 		return this.players[playerNumber - 1];
@@ -132,5 +144,13 @@ public class GameController
 	public int getCurrentPlayerNumber()
 	{
 		return this.getCurrentPlayer() == this.players[0] ? 1 : 2;
+	}
+
+	/**
+	 * @return the turnCount
+	 */
+	public int getTurnCount()
+	{
+		return turnCount;
 	}
 }

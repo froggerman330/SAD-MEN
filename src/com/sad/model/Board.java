@@ -85,11 +85,15 @@ public class Board
 
 	public void performMove(Move move) throws IllegalMoveException
 	{
-		if(move.getNewPieceLocation() != null)
-		{// removing a piece from other player
-			if(this.history.peek().getPlayer() != this.getCurrentPlayer())
-			{
-				throw new IllegalMoveException("You can only remove a piece if you have formed a mill.");
+		if(move.getNewPieceLocation() == null)
+		{
+			if(!this.history.isEmpty())
+			{// removing a piece from other player
+				if(this.history.peek().getPlayer() != this.getCurrentPlayer())
+				{
+
+					throw new IllegalMoveException("You can only remove a piece if you have formed a mill.");
+				}
 			}
 
 			this.removePieceAt(this.getController().getOtherPlayer(move.getPlayer()), move.getPreviousPieceLocation());
