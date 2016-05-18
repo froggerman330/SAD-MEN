@@ -152,9 +152,9 @@ public class Board
 		int[] location = move.getPreviousPieceLocation();
 		Player currentPlayer = move.getPlayer();
 		Player nonCurrentPlayer = this.getController().getOtherPlayer(currentPlayer);
-		Piece currentPiece = this.board[location[0]][location[1]];
+		Piece pieceAtLocation = this.board[location[0]][location[1]];
 
-		if(currentPiece == null || currentPiece == Piece.noPiece)
+		if(pieceAtLocation == null || pieceAtLocation == Piece.noPiece)
 		{
 			throw new IllegalMoveException("There is no piece to remove at " + (location[0] + 1) + ", "
 					+ (location[1] + 1) + ". Please select another piece.");
@@ -163,7 +163,7 @@ public class Board
 		{
 			throw new IllegalMoveException("There are other non-mill forming pieces on the board to remove.");
 		}
-		else if(currentPiece.getPlayer() == this.getController().getOtherPlayer(currentPlayer))
+		else if(pieceAtLocation.getPlayer() == currentPlayer)
 		{
 			throw new IllegalMoveException("You cannot remove your own piece.");
 		}
