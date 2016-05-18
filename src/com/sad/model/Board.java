@@ -44,21 +44,10 @@ public class Board
 		this.initializeMills();
 	}
 
-	public void setBoard(Piece[][] board)
-	{
-		this.board = board;
-	}
-
-	public Player getCurrentPlayer()
-	{
-		return this.getController().getCurrentPlayer();
-	}
-
 	/**
 	 * Associates the other two locations for both vertical and horizontal mill
-	 * formation for each playable
-	 * intersection. Handles the knowing adjacent locations responsibility for
-	 * the board class.
+	 * formation for each playable intersection. Handles the knowing adjacent
+	 * locations responsibility for the board class.
 	 */
 	private void initializeMills()
 	{// knows adjacent intersections
@@ -88,15 +77,19 @@ public class Board
 		this.millMap.put(new int[] { 6, 6 }, new int[][][] { { { 6, 0 }, { 6, 3 } }, { { 0, 6 }, { 3, 6 } } });
 	}
 
+	/**
+	 * 
+	 * @param move
+	 * @throws IllegalMoveException
+	 */
 	public void performMove(Move move) throws IllegalMoveException
 	{
 		if(move.getNewPieceLocation() == null)
-		{
+		{// removing a piece
 			if(!this.history.isEmpty())
-			{// removing a piece from other player
-				if(this.history.peek().getPlayer() != this.getCurrentPlayer())
+			{
+				if(this.history.peek().getPlayer() != this.getController().getCurrentPlayer())
 				{
-
 					throw new IllegalMoveException("You can only remove a piece if you have formed a mill.");
 				}
 			}
@@ -107,14 +100,14 @@ public class Board
 		{// adding a piece for playerY
 			if(!this.history.isEmpty())
 			{
-				if(this.history.peek().getPlayer() == this.getCurrentPlayer())
+				if(this.history.peek().getPlayer() == this.getController().getCurrentPlayer())
 				{
 					throw new IllegalMoveException(
 							"You may not place a piece instead of removing one for forming a mill.");
 				}
 			}
 
-			if(this.countPiecesToPlay(this.getCurrentPlayer()) == 0)
+			if(this.countPiecesToPlay(this.getController().getCurrentPlayer()) == 0)
 			{
 				throw new IllegalMoveException("You have no more pieces left to play.");
 			}
@@ -131,7 +124,7 @@ public class Board
 			}
 
 			Piece currentPiece = this.getPieceAt(move.getPreviousPieceLocation());
-			if(currentPiece == null || currentPiece.getPlayer() != this.getCurrentPlayer()
+			if(currentPiece == null || currentPiece.getPlayer() != this.getController().getCurrentPlayer()
 					|| currentPiece == Piece.noPiece)
 			{
 				throw new IllegalMoveException("You do not have a piece there to move.");
@@ -543,7 +536,7 @@ public class Board
 		{
 			if(this.getGameState().equals("placing"))
 			{
-				this.pieces.get(this.getCurrentPlayer()).add(piece);
+				this.pieces.get(this.getController().getCurrentPlayer()).add(piece);
 			}
 			throw new IllegalMoveException(
 					"You cannot play a piece at " + (location[0] + 1) + ", " + (location[1] + 1) + ".");
@@ -551,7 +544,7 @@ public class Board
 
 		if(this.getGameState().equals("placing"))
 		{
-			this.pieces.get(this.getCurrentPlayer()).add(piece);
+			this.pieces.get(this.getController().getCurrentPlayer()).add(piece);
 		}
 		throw new IllegalMoveException(
 				"There is already a piece at " + (location[0] + 1) + ", " + (location[1] + 1) + ".");

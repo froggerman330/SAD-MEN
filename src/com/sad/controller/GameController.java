@@ -48,7 +48,7 @@ public class GameController
 	}
 
 	/**
-	 * The main game loop. Loops until game is over. TODO: Draw checking.
+	 * The main game loop. Loops until game is over.
 	 */
 	private void startGameLoop()
 	{
@@ -57,23 +57,10 @@ public class GameController
 		this.players[1].setGameController(this);
 		this.board.setGameController(this);
 
-		while(!this.isGameOver())
+		while(!this.board.isGameOver())
 		{
 
-			if(this.board.countPiecesToPlay(this.getCurrentPlayer()) == 0)
-			{
-				this.board.setGameState("moving");
-			}
-			else
-			{
-				this.board.setGameState("placing");
-			}
-
-			if(this.board.getGameState().equals("moving")
-					&& this.board.countPiecesOnBoard(this.getCurrentPlayer()) == 3)
-			{
-				this.board.setGameState("flying");
-			}
+			this.updateGameState();
 
 			try
 			{
@@ -90,6 +77,31 @@ public class GameController
 				"Game is over. Player " + this.getPlayerNumber(this.getOtherPlayer(getCurrentPlayer())) + " won.");
 	}
 
+	/**
+	 * Updates the game state based on the number of pieces the current player
+	 * has left.
+	 */
+	private void updateGameState()
+	{
+		if(this.board.countPiecesToPlay(this.getCurrentPlayer()) == 0)
+		{
+			this.board.setGameState("moving");
+		}
+		else
+		{
+			this.board.setGameState("placing");
+		}
+
+		if(this.board.getGameState().equals("moving") && this.board.countPiecesOnBoard(this.getCurrentPlayer()) == 3)
+		{
+			this.board.setGameState("flying");
+		}
+	}
+
+	/**
+	 * Changes the current player to the other player and increments the turn
+	 * count.
+	 */
 	private void nextTurn()
 	{
 		if(this.getCurrentPlayer() == this.getPlayer(2))
@@ -99,11 +111,13 @@ public class GameController
 		this.setCurrentPlayer(this.getOtherPlayer(this.getCurrentPlayer()));
 	}
 
-	private boolean isGameOver()
-	{
-		return this.board.isGameOver();
-	}
-
+	/**
+	 * Gets the move from program user through view.
+	 * 
+	 * @param board
+	 *            the current board.
+	 * @return the move the user selected.
+	 */
 	public Move getMoveFromUser(Board board)
 	{
 		return this.view.getMoveFromUser(board);
@@ -117,6 +131,13 @@ public class GameController
 		return this.currentPlayer;
 	}
 
+	/**
+	 * Returns the <i>player</i> other than <b>player</b>.
+	 * 
+	 * @param player
+	 *            the player that is not wanted.
+	 * @return the other <i>player</i> that is not <b>player</b>.
+	 */
 	public Player getOtherPlayer(Player player)
 	{
 		return player == this.players[0] ? this.players[1] : this.players[0];
@@ -143,19 +164,25 @@ public class GameController
 		return this.players[playerNumber - 1];
 	}
 
+	/**
+	 * 
+	 * @return the current player number.
+	 */
 	public int getCurrentPlayerNumber()
 	{
 		return this.getCurrentPlayer() == this.players[0] ? 1 : 2;
 	}
 
+	/**
+	 * Gets the player number associated with <b>player</b>.
+	 * 
+	 * @param player
+	 *            the <i>player</i> to get the player number of.
+	 * @return the player number of <b>player</b>.
+	 */
 	private int getPlayerNumber(Player player)
 	{
 		return players[0] == player ? 1 : 0;
-	}
-
-	public Board getBoard()
-	{
-		return this.board;
 	}
 
 	/**

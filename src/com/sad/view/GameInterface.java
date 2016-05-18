@@ -72,14 +72,14 @@ public class GameInterface
 			String desiredLocation = in.readLine().toLowerCase();
 			System.out.println("You entered: " + desiredLocation);
 			int[][] locations = this.parseMove(startingLocation, desiredLocation);
-			return new Move(locations[0], locations[1], board.getCurrentPlayer());
+			return new Move(locations[0], locations[1]);
 		}
 		catch(IOException e)
 		{
 			this.displayError(e);
 		}
 
-		return new Move(new int[] { 4, 4 }, new int[] { 4, 4 }, null);
+		return new Move(new int[] { 4, 4 }, new int[] { 4, 4 });
 		// dummy values of board center to trip illegal move.
 	}
 
