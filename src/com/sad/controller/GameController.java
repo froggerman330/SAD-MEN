@@ -24,19 +24,6 @@ public class GameController
 	private int turnCount = 1;
 
 	/**
-	 * Constructor sets up the view and gets the players from it before building
-	 * the board, setting the current player and starting the game loop.
-	 */
-	public GameController()
-	{
-		this.view = new GameInterface();
-		GameParams gameParams = this.view.getGameParams();
-		this.players[0] = PlayerFactory.buildPlayer(gameParams.getPlayer1());
-		this.players[1] = PlayerFactory.buildPlayer(gameParams.getPlayer2());
-		this.board = new Board(this.players);
-	}
-
-	/**
 	 * Main program entrance.
 	 * 
 	 * @param args
@@ -44,7 +31,10 @@ public class GameController
 	 */
 	public static void main(String[] args)
 	{
-		new GameController().startGameLoop();
+		GameController controller = new GameController();
+		controller.setup();
+		controller.startGameLoop();
+
 	}
 
 	/**
@@ -53,9 +43,6 @@ public class GameController
 	private void startGameLoop()
 	{
 		this.setCurrentPlayer(this.players[0]);
-		this.players[0].setGameController(this);
-		this.players[1].setGameController(this);
-		this.board.setGameController(this);
 
 		while(!this.board.isGameOver())
 		{
@@ -75,6 +62,24 @@ public class GameController
 
 		this.view.displayMessage(
 				"Game is over. Player " + this.getPlayerNumber(this.getOtherPlayer(getCurrentPlayer())) + " won.");
+	}
+
+	/**
+	 * Sets up the view and gets the players from it before building the board.
+	 */
+	private void setup()
+	{
+
+		this.view = new GameInterface();
+
+		GameParams gameParams = this.view.getGameParams();
+		this.players[0] = PlayerFactory.buildPlayer(gameParams.getPlayer1());
+		this.players[1] = PlayerFactory.buildPlayer(gameParams.getPlayer2());
+		this.players[0].setGameController(this);
+		this.players[1].setGameController(this);
+
+		this.board = new Board(this.players);
+		this.board.setGameController(this);
 	}
 
 	/**
