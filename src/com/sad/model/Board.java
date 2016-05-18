@@ -135,7 +135,9 @@ public class Board
 	 *            the remove move.
 	 * @throws IllegalMoveException
 	 *             if the player has not formed a mill before trying to remove a
-	 *             piece.
+	 *             piece or the piece they are trying to remove is a mil and
+	 *             there are other non-mill forming pieces on the board or if
+	 *             the player tries to remove their own piece.
 	 */
 	private void checkRemovePieceRules(Move move) throws IllegalMoveException
 	{
@@ -148,7 +150,8 @@ public class Board
 		}
 
 		int[] location = move.getPreviousPieceLocation();
-		Player player = move.getPlayer();
+		Player currentPlayer = move.getPlayer();
+		Player nonCurrentPlayer = this.getController().getOtherPlayer(currentPlayer);
 		Piece currentPiece = this.board[location[0]][location[1]];
 
 		if(currentPiece == null || currentPiece == Piece.noPiece)
@@ -156,11 +159,11 @@ public class Board
 			throw new IllegalMoveException("There is no piece to remove at " + (location[0] + 1) + ", "
 					+ (location[1] + 1) + ". Please select another piece.");
 		}
-		else if(this.isMill(player, location) && this.isNonMillPieceOnBoard(player))
+		else if(this.isMill(nonCurrentPlayer, location) && this.isNonMillPieceOnBoard(currentPlayer))
 		{
 			throw new IllegalMoveException("There are other non-mill forming pieces on the board to remove.");
 		}
-		else if(currentPiece.getPlayer() == this.getController().getOtherPlayer(player))
+		else if(currentPiece.getPlayer() == this.getController().getOtherPlayer(currentPlayer))
 		{
 			throw new IllegalMoveException("You cannot remove your own piece.");
 		}
