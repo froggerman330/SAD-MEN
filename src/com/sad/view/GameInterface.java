@@ -11,6 +11,13 @@ import com.sad.framework.PlayerType;
 import com.sad.model.Board;
 import com.sad.model.Piece;
 
+/**
+ * The game interface or view. Displays things on the console and gets human
+ * input.
+ * 
+ * @author frogg
+ *
+ */
 public class GameInterface
 {
 	private static String horizontalCols = "  1 2 3 4 5 6 7";
@@ -23,11 +30,17 @@ public class GameInterface
 			{ '|', ' ', 'o', '-', '-', '-', 'o', '-', '-', '-', 'o', ' ', '|' },
 			{ 'o', '-', '-', '-', '-', '-', 'o', '-', '-', '-', '-', '-', 'o' } };
 
+	/**
+	 * On creation, prints the board for everybody to see.
+	 */
 	public GameInterface()
 	{
 		this.printBoard();
 	}
 
+	/**
+	 * Prints the board character for character.
+	 */
 	private void printBoard()
 	{
 		System.out.println("\n" + horizontalCols);
