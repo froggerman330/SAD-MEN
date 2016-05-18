@@ -113,7 +113,7 @@ public class Board
 		}
 		else
 		{// moving a piece
-			this.checkMovePieceRules(move);
+			this.checkMovingPieceRules(move);
 
 			this.setPieceAt(move.getNewPieceLocation(), this.getPieceAt(move.getPreviousPieceLocation()));
 			this.removePieceAt(move.getPreviousPieceLocation());
@@ -159,7 +159,7 @@ public class Board
 			throw new IllegalMoveException("There is no piece to remove at " + (location[0] + 1) + ", "
 					+ (location[1] + 1) + ". Please select another piece.");
 		}
-		else if(this.isMill(nonCurrentPlayer, location) && this.isNonMillPieceOnBoard(currentPlayer))
+		else if(this.isMill(nonCurrentPlayer, location) && this.isNonMillPieceOnBoard(nonCurrentPlayer))
 		{
 			throw new IllegalMoveException("There are other non-mill forming pieces on the board to remove.");
 		}
@@ -223,7 +223,7 @@ public class Board
 	 *             no piece there <b>or</b> if the game stage is flying, it does
 	 *             not fit the flying rules.
 	 */
-	private void checkMovePieceRules(Move move) throws IllegalMoveException
+	private void checkMovingPieceRules(Move move) throws IllegalMoveException
 	{
 		if(this.getGameState().equals("placing"))
 		{
