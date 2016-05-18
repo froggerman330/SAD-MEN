@@ -57,17 +57,36 @@ public class GameInterface
 		System.out.println("");
 	}
 
+	/**
+	 * Display an error message to the user.
+	 * 
+	 * @param e
+	 *            the error to get the message from.
+	 */
 	public void displayError(Exception e)
 	{
 		this.displayMessage(e.getMessage());
 	}
 
+	/**
+	 * Display any message to the user.
+	 * 
+	 * @param msg
+	 *            the message to display.
+	 */
 	public void displayMessage(String msg)
 	{
 		System.out.println("\n !MESSAGE FROM SYSTEM:");
 		System.out.println(msg);
 	}
 
+	/**
+	 * Prompt the human user for a move.
+	 * 
+	 * @param board
+	 *            the board that the user needs to see to produce the move.
+	 * @return the human user's move.
+	 */
 	public Move getMoveFromUser(Board board)
 	{
 		this.updateView(board);
@@ -93,9 +112,17 @@ public class GameInterface
 		}
 
 		return new Move(new int[] { 4, 4 }, new int[] { 4, 4 });
-		// dummy values of board center to trip illegal move.
+		// dummy values of board center to trip illegal move, unreachable due to
+		// parseMove.
 	}
 
+	/**
+	 * Updates the internal state of the board to match the current <b>board</b>
+	 * .
+	 * 
+	 * @param board
+	 *            the board to get the state from.
+	 */
 	private void updateView(Board board)
 	{// update with new board
 		for(int i = 0; i < board.getBoard().length; i++)
@@ -177,6 +204,16 @@ public class GameInterface
 		return new GameParams(players[0], players[1]);
 	}
 
+	/**
+	 * Parses the strings given by user input and turns them into {{x,y},{x,y}}.
+	 * 
+	 * @param startingLocation
+	 *            the starting location string.
+	 * @param desiredLocation
+	 *            the desired location string.
+	 * @return a two dimensional array containing two coordinate pairs, starting
+	 *         and desired locations.w
+	 */
 	private int[][] parseMove(String startingLocation, String desiredLocation)
 	{
 		int[] startingLocationArray = null;
