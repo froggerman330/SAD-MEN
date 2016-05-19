@@ -97,10 +97,10 @@ public class GameInterface
 		try
 		{
 			BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-			System.out.println("Please enter piece starting location x,y (or blank for playing a new piece)");
+			System.out.println("Please enter piece starting location row,col (or blank for playing a new piece)");
 			String startingLocation = in.readLine().toLowerCase();
 			System.out.println("You entered: " + startingLocation);
-			System.out.println("Please enter desired piece location x,y (or blank for removing a piece)");
+			System.out.println("Please enter desired piece location row,col (or blank for removing a piece)");
 			String desiredLocation = in.readLine().toLowerCase();
 			System.out.println("You entered: " + desiredLocation);
 			int[][] locations = this.parseMove(startingLocation, desiredLocation);
