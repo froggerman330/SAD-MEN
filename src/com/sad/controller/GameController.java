@@ -44,9 +44,8 @@ public class GameController
 	{
 		this.setCurrentPlayer(this.players[0]);
 
-		while(!this.board.isGameOver())
+		do
 		{
-
 			this.updateGameState();
 
 			try
@@ -59,6 +58,7 @@ public class GameController
 				this.view.displayError(e);
 			}
 		}
+		while(!this.board.isGameOver());
 
 		this.view.displayMessage(
 				"Game is over. Player " + this.getPlayerNumber(this.getOtherPlayer(getCurrentPlayer())) + " won.");
@@ -92,14 +92,14 @@ public class GameController
 		{
 			this.board.setGameState("moving");
 		}
+		else if(this.board.countPiecesToPlay(currentPlayer) == 0
+				&& this.board.countPiecesOnBoard(this.getCurrentPlayer()) == 3)
+		{
+			this.board.setGameState("flying");
+		}
 		else
 		{
 			this.board.setGameState("placing");
-		}
-
-		if(this.board.getGameState().equals("moving") && this.board.countPiecesOnBoard(this.getCurrentPlayer()) == 3)
-		{
-			this.board.setGameState("flying");
 		}
 	}
 

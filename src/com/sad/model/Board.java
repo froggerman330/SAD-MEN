@@ -264,10 +264,10 @@ public class Board
 					+ ") to " + "(" + (loc2[0] + 1) + ", " + (loc2[1] + 1) + ") until you can fly.");
 		}
 
-		if(loc2[0] != loc1[0])
+		if(loc2[1] == loc1[1])
 		{// y locations the same
 			switch(Math.abs(loc2[0] - loc1[0]))
-			{// distance between locations
+			{// distance between x locations
 				case 1:
 					if(loc2[1] != 2 && loc2[1] != 3 && loc2[1] != 4)
 					{// if it's not col 3, col 4 or col 5
