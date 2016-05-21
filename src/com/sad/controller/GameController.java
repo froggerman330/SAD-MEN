@@ -60,8 +60,8 @@ public class GameController
 		}
 		while(!this.board.isGameOver());
 
-		this.view.displayMessage(
-				"Game is over. Player " + this.getPlayerNumber(this.getOtherPlayer(getCurrentPlayer())) + " won.");
+		this.view
+				.displayMessage("Game is over. Player " + (this.getPlayerIndex(this.getCurrentPlayer()) + 1) + " won.");
 	}
 
 	/**
@@ -179,13 +179,13 @@ public class GameController
 	}
 
 	/**
-	 * Gets the player number associated with <b>player</b>.
+	 * Gets the player index associated with <b>player</b>.
 	 * 
 	 * @param player
 	 *            the <i>player</i> to get the player number of.
 	 * @return the player number of <b>player</b>.
 	 */
-	private int getPlayerNumber(Player player)
+	private int getPlayerIndex(Player player)
 	{
 		return players[0] == player ? 1 : 0;
 	}
