@@ -220,8 +220,10 @@ public class Board
 	 *             if the game is not in the moving or flying stage <b>or</b>
 	 *             the location that the piece is meant to be coming from does
 	 *             not belong to the player trying to make the move or there's
-	 *             no piece there <b>or</b> if the game stage is flying, it does
-	 *             not fit the flying rules.
+	 *             no piece there <b>or</b> the new location is not an
+	 *             intersection <b>or</b> there is already a piece at the new
+	 *             location <b>or</b> if the game stage is flying, it does not
+	 *             fit the flying rules.
 	 */
 	private void checkMovingPieceRules(Move move) throws IllegalMoveException
 	{
@@ -236,6 +238,16 @@ public class Board
 				|| currentPiece == Piece.noPiece)
 		{
 			throw new IllegalMoveException("You do not have a piece there to move.");
+		}
+		else if(this.getPieceAt(move.getNewPieceLocation()) == null)
+		{
+			throw new IllegalMoveException("You cannot move a piece to " + (move.getNewPieceLocation()[0] + 1) + ", "
+					+ (move.getNewPieceLocation()[1] + 1) + ".");
+		}
+		else if(this.getPieceAt(move.getNewPieceLocation()) != Piece.noPiece)
+		{
+			throw new IllegalMoveException("There is already a piece at " + (move.getNewPieceLocation()[0] + 1) + ", "
+					+ (move.getNewPieceLocation()[1] + 1) + ".");
 		}
 
 		if(!this.getGameState().toLowerCase().equals("flying"))

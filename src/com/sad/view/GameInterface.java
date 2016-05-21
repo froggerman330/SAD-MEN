@@ -112,8 +112,8 @@ public class GameInterface
 		}
 
 		return new Move(new int[] { 4, 4 }, new int[] { 4, 4 });
-		// dummy values of board center to trip illegal move, unreachable due to
-		// parseMove.
+		// dummy values of board center to trip illegal move, unreachable in
+		// normal operation.
 	}
 
 	/**
