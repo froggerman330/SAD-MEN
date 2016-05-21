@@ -526,47 +526,17 @@ public class Board
 	 */
 	public boolean isGameOver()
 	{
-		if(this.gameState.equalsIgnoreCase("flying"))
+		for(int i = 1; i <= 2; i++)
 		{
-			int minCount = this.getMinPiecesOnBoard();
-
-			if(minCount == 2)
+			Player p = this.getPlayer(i);
+			if(this.countPiecesOnBoard(p) == 2 && this.countPiecesToPlay(p) == 0)
 			{
 				return true;
 			}
+
 		}
 
 		return false;
-	}
-
-	/**
-	 * Counts the number of pieces left for each player and returns the minimum.
-	 * 
-	 * @return the minimum number of pieces left for the players.
-	 */
-	private int getMinPiecesOnBoard()
-	{
-		int countPlayer1 = 0;
-		int countPlayer2 = 0;
-		for(Piece[] pieceRow : this.getBoard())
-		{
-			for(Piece p : pieceRow)
-			{
-				if(p != null && p != Piece.noPiece)
-				{
-					if(this.getController().getPlayer(1) == p.getPlayer())
-					{
-						countPlayer1++;
-					}
-					else if(this.getController().getPlayer(2) == p.getPlayer())
-					{
-						countPlayer2++;
-					}
-				}
-			}
-		}
-
-		return countPlayer1 >= countPlayer2 ? countPlayer2 : countPlayer1;
 	}
 
 	/**
