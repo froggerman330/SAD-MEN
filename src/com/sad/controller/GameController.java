@@ -88,14 +88,14 @@ public class GameController
 	 */
 	private void updateGameState()
 	{
-		if(this.board.countPiecesToPlay(this.getCurrentPlayer()) == 0)
-		{
-			this.board.setGameState("moving");
-		}
-		else if(this.board.countPiecesToPlay(currentPlayer) == 0
+		if(this.board.countPiecesToPlay(currentPlayer) == 0
 				&& this.board.countPiecesOnBoard(this.getCurrentPlayer()) == 3)
 		{
 			this.board.setGameState("flying");
+		}
+		else if(this.board.countPiecesToPlay(this.getCurrentPlayer()) == 0)
+		{
+			this.board.setGameState("moving");
 		}
 		else
 		{
